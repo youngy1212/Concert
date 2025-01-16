@@ -7,19 +7,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
-import kr.hhplus.be.server.api.reservation.dto.ReservationRequest;
+import kr.hhplus.be.server.api.reservation.dto.PaymentReservationRequest;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.model.SeatStatus;
-import kr.hhplus.be.server.domain.reservation.model.TemporaryReservation;
+import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.token.service.QueueTokenQueryService;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
-import kr.hhplus.be.server.infrastructure.reservation.TemporaryReservationJpaRepository;
+import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
 import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +57,7 @@ class AuthorizationAspectTest {
     private ConcertJpaRepository concertJpaRepository;
 
     @Autowired
-    private TemporaryReservationJpaRepository temporaryReservationJpaRepository;
+    private ReservationJpaRepository reservationJpaRepository;
 
     @Autowired
     private ConcertScheduleJpaRepository concertScheduleJpaRepository;
@@ -76,15 +76,13 @@ class AuthorizationAspectTest {
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.createInTime(saveUse,concert,LocalDateTime.now().plusMinutes(20)));
-        TemporaryReservation tempReservation = temporaryReservationJpaRepository.save(
-                TemporaryReservation.create(concertSchedule, saveUse, seat, LocalDateTime.now().plusMinutes(5),
-                        queueToken.getQueueTokenId()));
+        Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule, saveUse, seat, queueToken.getQueueTokenId()));
 
-        ReservationRequest request = ReservationRequest.builder()
-                .seatId(seat.getSeatId())
+        PaymentReservationRequest request = PaymentReservationRequest.builder()
+                .seatId(seat.getId())
                 .tokenId(queueToken.getQueueTokenId())
                 .userId(saveUse.getId())
-                .temporaryReservationId(tempReservation.getId())
+                .temporaryReservationId(reservation.getId())
                 .concertScheduleId(concertSchedule.getId())
                 .paymentData("data")
                 .build();
@@ -113,15 +111,13 @@ class AuthorizationAspectTest {
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse,concert));
-        TemporaryReservation tempReservation = temporaryReservationJpaRepository.save(
-                TemporaryReservation.create(concertSchedule, saveUse, seat, LocalDateTime.now().plusMinutes(5),
-                        queueToken.getQueueTokenId()));
+        Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule, saveUse, seat, queueToken.getQueueTokenId()));
 
-        ReservationRequest request = ReservationRequest.builder()
-                .seatId(seat.getSeatId())
+        PaymentReservationRequest request = PaymentReservationRequest.builder()
+                .seatId(seat.getId())
                 .tokenId(queueToken.getQueueTokenId())
                 .userId(saveUse.getId())
-                .temporaryReservationId(tempReservation.getId())
+                .temporaryReservationId(reservation.getId())
                 .concertScheduleId(concertSchedule.getId())
                 .paymentData("data")
                 .build();
@@ -155,15 +151,14 @@ class AuthorizationAspectTest {
         System.out.println("Saved expiresAt: " + queueToken.getExpiresAt());
         System.out.println("Saved expiresAt: " + LocalDateTime.now());
 
-        TemporaryReservation tempReservation = temporaryReservationJpaRepository.save(
-                TemporaryReservation.create(concertSchedule, saveUse, seat, LocalDateTime.now().minusMinutes(15),
-                        queueToken.getQueueTokenId()));
+        Reservation reservation = reservationJpaRepository.save(
+                Reservation.create(concertSchedule, saveUse, seat, queueToken.getQueueTokenId()));
 
-        ReservationRequest request = ReservationRequest.builder()
-                .seatId(seat.getSeatId())
+        PaymentReservationRequest request = PaymentReservationRequest.builder()
+                .seatId(seat.getId())
                 .tokenId(queueToken.getQueueTokenId())
                 .userId(saveUse.getId())
-                .temporaryReservationId(tempReservation.getId())
+                .temporaryReservationId(reservation.getId())
                 .concertScheduleId(concertSchedule.getId())
                 .paymentData("data")
                 .build();

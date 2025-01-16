@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.concert.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +23,8 @@ public class Seat extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seatId;
+    @Column(name = "seat_id")
+    private Long id;
 
     private int seatNumber;
 

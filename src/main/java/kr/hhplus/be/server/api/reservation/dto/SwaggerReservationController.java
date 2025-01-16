@@ -21,7 +21,7 @@ public interface SwaggerReservationController {
                             responseCode = "200",
                             description = "임시 좌석 예약 성공",
                             content = @Content(array = @ArraySchema(
-                                    schema = @Schema(implementation = TempReservationResponse.class)
+                                    schema = @Schema(implementation = ReservationResponse.class)
                             ))
                     ),
                     @ApiResponse(
@@ -38,7 +38,7 @@ public interface SwaggerReservationController {
                             )
                     ),
             },security = @SecurityRequirement(name = "Authorization"))
-    ResponseEntity<TempReservationResponse> tempReservationSeat(@RequestBody TempReservationRequest request);
+    ResponseEntity<ReservationResponse> reservationSeat(@RequestBody ReservationRequest request);
 
 
     @Operation(
@@ -49,7 +49,7 @@ public interface SwaggerReservationController {
                             responseCode = "200",
                             description = "조회 성공",
                             content = @Content(
-                                    schema = @Schema(implementation = ReservationResponse.class)
+                                    schema = @Schema(implementation = CompleteReservationResponse.class)
                             )
                     ),
                     @ApiResponse(
@@ -69,7 +69,7 @@ public interface SwaggerReservationController {
             },
             security = @SecurityRequirement(name = "Authorization")
     )
-    ResponseEntity<ReservationResponse> reservationSeat(@RequestBody ReservationRequest request);
+    ResponseEntity<CompleteReservationResponse> reservationSeat(@RequestBody PaymentReservationRequest request);
 
 }
 

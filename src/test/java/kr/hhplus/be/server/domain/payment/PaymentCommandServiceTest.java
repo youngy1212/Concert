@@ -34,13 +34,14 @@ class PaymentCommandServiceTest {
 
     @DisplayName("결제 정보를 생성합니다.")
     @Test
-    void CreateReservation() {
+    void CreatePaymentReservation() {
         // given
         User user = User.create("유저이름", "email.com");
         Concert concert = Concert.create("공연", "고척돔");
         ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
         Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
-        Reservation reservation = Reservation.create(concertSchedule, user, seat);
+        String tokenId = "TOKEN_ID";
+        Reservation reservation = Reservation.create(concertSchedule, user, seat,tokenId);
 
         Payment payment = Payment.create(user, reservation, 10000L, PaymentStatus.SUCCESS);
 

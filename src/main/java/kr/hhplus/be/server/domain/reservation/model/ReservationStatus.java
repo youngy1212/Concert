@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TemporaryReservationStatus {
+public enum ReservationStatus {
 
     RESERVED("예약중"),
     BOOKED("예약완료"),

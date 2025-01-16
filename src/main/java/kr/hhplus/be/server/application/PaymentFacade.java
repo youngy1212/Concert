@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.application;
 
-import kr.hhplus.be.server.application.dto.ReservationDto;
+import kr.hhplus.be.server.application.dto.PaymentReservationDto;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
@@ -10,7 +10,6 @@ import kr.hhplus.be.server.domain.payment.model.Payment;
 import kr.hhplus.be.server.domain.payment.model.PaymentStatus;
 import kr.hhplus.be.server.domain.payment.service.PaymentCommandService;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
-import kr.hhplus.be.server.domain.reservation.model.TemporaryReservation;
 import kr.hhplus.be.server.domain.reservation.service.ReservationCommandService;
 import kr.hhplus.be.server.domain.reservation.service.ReservationQueryService;
 import kr.hhplus.be.server.domain.user.model.User;
@@ -34,20 +33,20 @@ public class PaymentFacade {
     private final UserQueryService userQueryService;
     private final PaymentCommandService paymentCommandService;
 
-    //예약 완료
+    //예약 및 결제 완료
     @Transactional
-    public ReservationDto completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long temporaryReservationId, String paymentData) {
+    public PaymentReservationDto completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long ReservationId, String paymentData) {
 
         User user = userQueryService.getUserById(userId);
-        TemporaryReservation temporaryReservation = reservationQueryService.getTemporaryReservation(temporaryReservationId);
+        Reservation reservation = reservationCommandService.findByLock(ReservationId); //락 걸고 조회
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);
-        Seat seat = concertCommandService.findByIdLock(seatId);
+        Seat seat = concertCommandService.findByIdLock(seatId); //그냥 조회
 
-        if(!seat.getSeatId().equals(temporaryReservation.getSeat().getSeatId())){
+        if(!seat.getId().equals(reservation.getSeat().getId())){
             throw new CustomException(HttpStatus.CONFLICT, "예약 정보가 일치하지 않습니다.");
         }
 
-        if(!user.getId().equals(temporaryReservation.getUser().getId())){
+        if(!user.getId().equals(reservation.getUser().getId())){
             throw new CustomException(HttpStatus.CONFLICT, "예약 정보가 일치하지 않습니다.");
         }
 
@@ -58,11 +57,10 @@ public class PaymentFacade {
         }
 
         //결제 성공시
-        seat.book();
-        Reservation reservation = reservationCommandService.createReservation(concertSchedule, user, seat);
+        //seat.book();
+        reservation.book();
         Payment payment = paymentCommandService.savePayment(user, reservation, seat.getPrice(), PaymentStatus.SUCCESS);
-        return new ReservationDto(payment.getId(),reservation.getId(), reservation.getSeat().getSeatId());
-
+        return new PaymentReservationDto(concertSchedule.getId(),user.getId(), seat.getId(), payment.getId(), payment.getAmount());
 
     }
 }

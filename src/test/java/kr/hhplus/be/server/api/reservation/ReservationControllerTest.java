@@ -8,13 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
+import kr.hhplus.be.server.api.reservation.dto.PaymentReservationRequest;
 import kr.hhplus.be.server.api.reservation.dto.ReservationRequest;
-import kr.hhplus.be.server.api.reservation.dto.TempReservationRequest;
 import kr.hhplus.be.server.application.PaymentFacade;
 import kr.hhplus.be.server.application.ReservationFacade;
+import kr.hhplus.be.server.application.dto.PaymentReservationDto;
 import kr.hhplus.be.server.application.dto.ReservationDto;
-import kr.hhplus.be.server.application.dto.TempReservationDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,21 +39,21 @@ class ReservationControllerTest {
 
     @DisplayName("좌석 예약을 성공적으로 수행한다.")
     @Test
-    void reservationSeatReturnTempReservationResponse() throws Exception {
+    void reservationSeatReturnReservationResponse() throws Exception {
         // given
-        TempReservationRequest request = new TempReservationRequest(1L, 2L, 3L, "TOKEN_ID");
-        TempReservationDto tempReservationDto = new TempReservationDto(20L, LocalDateTime.now().plusMinutes(10));
+        ReservationRequest request = new ReservationRequest(1L, 2L, 3L, "TOKEN_ID");
+        ReservationDto ReservationDto = new ReservationDto(20L, 21L);
 
-        when(reservationFacade.reserveTempSeat(anyLong(), anyLong(), anyLong(), anyString()))
-                .thenReturn(tempReservationDto);
+        when(reservationFacade.reserveSeat(anyLong(), anyLong(), anyLong(), anyString()))
+                .thenReturn(ReservationDto);
 
         // When & Then
-        mockMvc.perform(post("/concert/seats/temp/reservation")
+        mockMvc.perform(post("/concert/seats/reservation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.tempReservationId").value(tempReservationDto.tempReservationId()))
-                .andExpect(jsonPath("$.expiresAt").exists());
+                .andExpect(jsonPath("$.reservationId").value(ReservationDto.reservationId()))
+                .andExpect(jsonPath("$.seatId").value(ReservationDto.seatId()));
 
     }
 
@@ -63,20 +62,21 @@ class ReservationControllerTest {
     @Test
     void completeReservationReturnReservationResponse() throws Exception {
         // given
-        ReservationRequest request = new ReservationRequest(1L, 2L,"TOKEN_ID",4L,5L,"Data");
-        ReservationDto reservationDto = new ReservationDto(20L,1L, 2L);
+        PaymentReservationRequest request = new PaymentReservationRequest(1L, 2L,"TOKEN_ID",4L,5L,"Data");
+        PaymentReservationDto paymentReservationDto = new PaymentReservationDto(20L,1L,2L,3L,4000);
 
         when(paymentFacade.completeReservation(anyLong(), anyLong(), anyLong(), anyString(),anyLong(), anyString()))
-                .thenReturn(reservationDto);
+                .thenReturn(paymentReservationDto);
 
         // When & Then
         mockMvc.perform(post("/reservation/payment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.paymentTd").value(reservationDto.paymentId()))
-                .andExpect(jsonPath("$.reservationTd").value(reservationDto.reservationId()))
-                .andExpect(jsonPath("$.seatId").value(reservationDto.seatId()));
+                .andExpect(jsonPath("$.concertScheduleId").value(paymentReservationDto.concertScheduleId()))
+                .andExpect(jsonPath("$.seatId").value(paymentReservationDto.seatId()))
+                .andExpect(jsonPath("$.amount").value(paymentReservationDto.amount()))
+                .andExpect(jsonPath("$.paymentId").value(paymentReservationDto.paymentId()));
 
 
     }

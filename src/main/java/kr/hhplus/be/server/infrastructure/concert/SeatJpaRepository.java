@@ -11,10 +11,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface SeatJpaRepository extends JpaRepository<Seat, Long> {
 
-    @Query("SELECT s.seatId FROM Seat s where s.concertSchedule.id = :concertScheduleId")
+    @Query("SELECT s.id FROM Seat s where s.concertSchedule.id = :concertScheduleId")
     List<Long> findByConcertScheduleId(@Param("concertScheduleId")long concertScheduleId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT s FROM Seat s WHERE s.seatId = :seatId")
+    @Query("SELECT s FROM Seat s WHERE s.id = :seatId")
     Optional<Seat> findByIdLock(@Param("seatId") long seatId);
 }

@@ -64,7 +64,7 @@ class ConcertQueueTokenFacadeTest {
 
     @DisplayName("비정상 유저 토큰 발급 요청")
     @Test
-    public void testIssueQueueTokenUserNotFound() {
+    public void issueQueueTokenUserNotFound() {
         // given
         long userId = 99L;
         Concert SaveConcert = ConcertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
