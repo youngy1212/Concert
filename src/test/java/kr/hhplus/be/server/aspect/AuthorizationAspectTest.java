@@ -148,9 +148,6 @@ class AuthorizationAspectTest {
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.createInTime(saveUse,concert,LocalDateTime.now().minusMinutes(20)));
 
-        System.out.println("Saved expiresAt: " + queueToken.getExpiresAt());
-        System.out.println("Saved expiresAt: " + LocalDateTime.now());
-
         Reservation reservation = reservationJpaRepository.save(
                 Reservation.create(concertSchedule, saveUse, seat, queueToken.getQueueTokenId()));
 

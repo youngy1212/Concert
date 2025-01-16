@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.token;
+package kr.hhplus.be.server.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import kr.hhplus.be.server.application.ConcertQueueTokenFacade;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.user.model.User;
