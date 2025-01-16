@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.api.user;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,6 +78,30 @@ class PointControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.totalAmount").value(amount));
+
+    }
+
+    @DisplayName("포인트 충전시.amount 충전 값이 0이하 일때 에러 발생")
+    @Test
+    void ZeroAmount_Error() throws Exception {
+        // given
+        Long userId = 1L;
+        Long amount = 0L;
+        ChargeRequest request = ChargeRequest.builder()
+                .userId(userId)
+                .amount(amount)
+                .build();
+
+        ChargeDto chargeDto = new ChargeDto(userId, amount);
+        when(userCommandService.chargePoint(userId, amount)).thenReturn(chargeDto);
+
+        // when // then
+        mockMvc.perform(post("/point/charge")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print()) //
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("amount는 0보다 큰 양수여야 합니다.")));
 
     }
 

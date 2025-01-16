@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -32,7 +33,7 @@ public class AuthorizationAspect {
 
         String token = request.getHeader("QUEUE-TOKEN");
 
-        if (token == null || token.isEmpty()) {
+        if (!StringUtils.hasText(token)) {
             throw new CustomException("잘못 된 경로입니다.");
         }
 

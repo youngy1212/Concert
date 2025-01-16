@@ -25,6 +25,7 @@ public class PointController implements SwaggerPointController {
 
     @PostMapping("/point/charge")
     public ResponseEntity<ChargeResponse> chargePoint(@RequestBody ChargeRequest request){
+        request.validateAmount();
         ChargeDto chargeDto = userCommandService.chargePoint(request.getUserId(),
                 request.getAmount());
         return ResponseEntity.ok(ChargeResponse.of(chargeDto.userId(), chargeDto.Amount()));
