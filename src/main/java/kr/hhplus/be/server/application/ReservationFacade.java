@@ -6,7 +6,6 @@ import kr.hhplus.be.server.application.dto.ReservationDto;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.service.ConcertCommandService;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.reservation.model.ReservationStatus;
@@ -26,7 +25,6 @@ public class ReservationFacade {
     private final ReservationCommandService reservationCommandService;
     private final ReservationQueryService reservationQueryService;
     private final ConcertQueryService concertQueryService;
-    private final ConcertCommandService concertCommandService;
     private final UserQueryService userQueryService;
 
     @Transactional
@@ -34,6 +32,7 @@ public class ReservationFacade {
 
         User user = userQueryService.getUserById(userId);
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);
+        Seat seat = concertQueryService.getSeat(seatId);
 
         List<ReservationStatus> statuses = List.of(ReservationStatus.RESERVED, ReservationStatus.BOOKED);
         boolean existing = reservationQueryService.existingReservation(ConcertScheduleId,seatId,statuses );
@@ -42,8 +41,6 @@ public class ReservationFacade {
             throw new CustomException("이미 선택된 좌석입니다.");
         }
 
-
-        Seat seat = concertCommandService.findByIdLock(seatId);
         Reservation reservation = reservationCommandService.createReservation(concertSchedule, user,
                 seat, tokenId);
 

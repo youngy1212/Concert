@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
+import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.repository.ConcertQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -34,5 +35,10 @@ public class ConcertQueryImpl implements ConcertQuery {
     @Override
     public Optional<ConcertSchedule> getConcertSchedule(long concertScheduleId) {
         return concertScheduleJpaRepository.findById(concertScheduleId);
+    }
+
+    @Override
+    public Optional<Seat> getSeat(long seat) {
+        return seatJpaRepository.findById(seat);
     }
 }

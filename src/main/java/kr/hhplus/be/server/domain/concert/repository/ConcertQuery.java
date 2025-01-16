@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
+import kr.hhplus.be.server.domain.concert.model.Seat;
 
 public interface ConcertQuery {
 
@@ -14,4 +15,6 @@ public interface ConcertQuery {
     List<Long> findByConcertScheduleId(long concertScheduleId);
 
     Optional<ConcertSchedule> getConcertSchedule(long concertScheduleId);
+
+    Optional<Seat> getSeat(long seat);
 }

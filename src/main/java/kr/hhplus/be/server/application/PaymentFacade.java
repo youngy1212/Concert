@@ -4,14 +4,12 @@ import kr.hhplus.be.server.application.dto.PaymentReservationDto;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.service.ConcertCommandService;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
 import kr.hhplus.be.server.domain.payment.model.Payment;
 import kr.hhplus.be.server.domain.payment.model.PaymentStatus;
 import kr.hhplus.be.server.domain.payment.service.PaymentCommandService;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.reservation.service.ReservationCommandService;
-import kr.hhplus.be.server.domain.reservation.service.ReservationQueryService;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
 import kr.hhplus.be.server.infrastructure.gateway.PaySystem;
@@ -27,9 +25,7 @@ public class PaymentFacade {
 
     //좌석 예약
     private final ReservationCommandService reservationCommandService;
-    private final ReservationQueryService reservationQueryService;
     private final ConcertQueryService concertQueryService;
-    private final ConcertCommandService concertCommandService;
     private final UserQueryService userQueryService;
     private final PaymentCommandService paymentCommandService;
 
@@ -38,9 +34,9 @@ public class PaymentFacade {
     public PaymentReservationDto completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long ReservationId, String paymentData) {
 
         User user = userQueryService.getUserById(userId);
-        Reservation reservation = reservationCommandService.findByLock(ReservationId); //락 걸고 조회
+        Reservation reservation = reservationCommandService.findByLock(ReservationId); //락
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);
-        Seat seat = concertCommandService.findByIdLock(seatId); //그냥 조회
+        Seat seat = concertQueryService.getSeat(seatId);
 
         if(!seat.getId().equals(reservation.getSeat().getId())){
             throw new CustomException(HttpStatus.CONFLICT, "예약 정보가 일치하지 않습니다.");
@@ -57,7 +53,6 @@ public class PaymentFacade {
         }
 
         //결제 성공시
-        //seat.book();
         reservation.book();
         Payment payment = paymentCommandService.savePayment(user, reservation, seat.getPrice(), PaymentStatus.SUCCESS);
         return new PaymentReservationDto(concertSchedule.getId(),user.getId(), seat.getId(), payment.getId(), payment.getAmount());

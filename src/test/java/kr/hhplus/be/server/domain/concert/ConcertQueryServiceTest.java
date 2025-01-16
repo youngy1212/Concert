@@ -117,6 +117,20 @@ class ConcertQueryServiceTest {
 
     }
 
+    @DisplayName("좌석 정보가 존재하지 않음")
+    @Test
+    void getSeat_Fail() {
+        // given
+        long seatId = 3L;
+        when(concertQuery.getSeat(seatId)).thenReturn(Optional.empty());
+
+        // when // then
+        assertThatThrownBy(()-> concertQueryService.getSeat(seatId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("좌석을 찾을 수 없습니다.");
+
+    }
+
 
 
 

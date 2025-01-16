@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
+import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.repository.ConcertQuery;
 import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateDto;
 import kr.hhplus.be.server.domain.concert.service.dto.SeatDto;
@@ -20,6 +21,11 @@ public class ConcertQueryService {
     public Concert getConcertById(long concertId) {
         return concertQuery.findById(concertId)
                 .orElseThrow(() -> new NoSuchElementException("콘서트를 찾을 수 없습니다."));
+    }
+    
+    public Seat getSeat(long seat){
+        return concertQuery.getSeat(seat)
+                .orElseThrow(() -> new NoSuchElementException("좌석을 찾을 수 없습니다."));
     }
 
     public ConcertDateDto getAllConcertSchedule(final long concertId) {
