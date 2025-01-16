@@ -17,18 +17,10 @@ public class ChargeRequest {
         this.amount = amount;
     }
 
-    private static void validateAmount(Long amount) {
+    public void validateAmount() {
         if (amount == null || amount <= 0) {
             throw new CustomException("amount는 0보다 큰 양수여야 합니다.");
         }
-    }
-
-    public static ChargeRequest toRequest(Long userId, Long amount) {
-        validateAmount(amount);
-        return ChargeRequest.builder()
-                .userId(userId)
-                .amount(amount)
-                .build();
     }
 
 }

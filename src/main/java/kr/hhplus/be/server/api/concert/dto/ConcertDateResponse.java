@@ -11,20 +11,20 @@ import lombok.Getter;
 public class ConcertDateResponse {
 
     @Schema( description = "콘서트 ID")
-    private final Long ConcertScheduleId;
+    private final Long concertScheduleId;
 
     @Schema(description = "콘서트 날짜")
     private final LocalDateTime concertDate;
 
     @Builder
-    private ConcertDateResponse(Long ConcertScheduleId, LocalDateTime concertDate) {
-        this.ConcertScheduleId = ConcertScheduleId;
+    private ConcertDateResponse(Long concertScheduleId, LocalDateTime concertDate) {
+        this.concertScheduleId = concertScheduleId;
         this.concertDate = concertDate;
     }
 
     public static ConcertDateResponse of(ConcertSchedule concertSchedule) {
         return ConcertDateResponse.builder()
-                .ConcertScheduleId(concertSchedule.getId())
+                .concertScheduleId(concertSchedule.getId())
                 .concertDate(concertSchedule.getConcertDate()).build();
 
     }
