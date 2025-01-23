@@ -39,6 +39,6 @@ spring:
     generate-ddl: true
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
 
 springdoc.override-with-generic-response: false
