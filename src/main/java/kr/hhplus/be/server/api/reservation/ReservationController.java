@@ -29,7 +29,7 @@ public class ReservationController implements SwaggerReservationController {
             @RequestBody ReservationRequest request
     ){
         ReservationDto reservationDto = reservationFacade.reserveSeat(
-                request.getUserId(), request.getSeatId(), request.getUserId(), request.getTokenId());
+                request.getUserId(), request.getSeatId(), request.getConcertScheduleId(), request.getTokenId());
         return ResponseEntity.ok(ReservationResponse.of(reservationDto.reservationId(),reservationDto.seatId()));
     }
 
