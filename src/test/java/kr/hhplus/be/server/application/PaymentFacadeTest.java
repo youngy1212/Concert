@@ -20,6 +20,7 @@ import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
 import kr.hhplus.be.server.infrastructure.payment.PaymentJpaRepository;
 import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
 import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
+import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +61,9 @@ class PaymentFacadeTest {
     @Autowired
     private PaymentJpaRepository paymentJpaRepository;
 
+    @Autowired
+    private PointJpaRepository pointJpaRepository;
+
 
     @BeforeEach
     void tearDown() {
@@ -70,6 +74,7 @@ class PaymentFacadeTest {
         ConcertScheduleJpaRepository.deleteAllInBatch();
         ConcertJpaRepository.deleteAllInBatch();
         UserJpaRepository.deleteAllInBatch();
+        pointJpaRepository.deleteAllInBatch();
 
     }
 
