@@ -2,6 +2,7 @@ package kr.hhplus.be.server.application;
 
 
 import java.util.List;
+import kr.hhplus.be.server.annotation.DistributedLock;
 import kr.hhplus.be.server.application.dto.ReservationDto;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
@@ -15,7 +16,6 @@ import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,15 +27,17 @@ public class ReservationFacade {
     private final ConcertQueryService concertQueryService;
     private final UserQueryService userQueryService;
 
-    @Transactional
-    public ReservationDto reserveSeat(Long userId, Long seatId , Long ConcertScheduleId, String tokenId) {
+
+    @DistributedLock(key = "'reservation:' + #concertScheduleId + ':' + #seatId")
+    public ReservationDto reserveSeat(Long userId, Long seatId , Long concertScheduleId, String tokenId) {
 
         User user = userQueryService.getUserById(userId);
-        ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);
+        ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(concertScheduleId);
         Seat seat = concertQueryService.getSeat(seatId);
 
         List<ReservationStatus> statuses = List.of(ReservationStatus.RESERVED, ReservationStatus.BOOKED);
-        boolean existing = reservationQueryService.existingReservation(ConcertScheduleId,seatId,statuses );
+        boolean existing = reservationQueryService.existingReservation(concertScheduleId,seatId,statuses );
+
 
         if (existing) {
             throw new CustomException("이미 선택된 좌석입니다.");
@@ -46,7 +48,6 @@ public class ReservationFacade {
 
         return new ReservationDto(reservation.getId(),reservation.getSeat().getId());
     }
-
 
 
 }
