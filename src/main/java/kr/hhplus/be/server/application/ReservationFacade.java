@@ -16,6 +16,7 @@ import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class ReservationFacade {
 
 
     @DistributedLock(key = "'reservation:' + #concertScheduleId + ':' + #seatId")
+    @Transactional
     public ReservationDto reserveSeat(Long userId, Long seatId , Long concertScheduleId, String tokenId) {
 
         User user = userQueryService.getUserById(userId);

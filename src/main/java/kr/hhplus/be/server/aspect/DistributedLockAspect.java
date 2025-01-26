@@ -10,17 +10,18 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Order(1)
 public class DistributedLockAspect {
 
     private static final String REDISSON_LOCK_PREFIX = "LOCK:";
     private final RedissonClient redissonClient;
-    private final AopForTransaction aopForTransaction;
 
     @Around("@annotation(kr.hhplus.be.server.annotation.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
@@ -40,8 +41,7 @@ public class DistributedLockAspect {
             if (!isLocked) {
                 return new InterruptedException("락 획득 실패");
             }
-            // 락 획득 성공시 새로운 트랜잭션에서 메서드 실행
-            return aopForTransaction.proceed(joinPoint);
+            return joinPoint.proceed();
 
         } finally {
             try {
