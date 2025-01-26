@@ -14,7 +14,6 @@ import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
-import kr.hhplus.be.server.domain.token.service.QueueTokenQueryService;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
@@ -37,9 +36,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("test")
 @Testcontainers
 class AuthorizationAspectTest {
-
-    @Autowired
-    private QueueTokenQueryService queueTokenQueryService;
 
     @Autowired
     private MockMvc mockMvc;

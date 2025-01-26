@@ -29,10 +29,10 @@ class QueueTokenConcurrencyTest {
 
 
     @Autowired
-    private UserJpaRepository UserJpaRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
-    private ConcertJpaRepository ConcertJpaRepository;
+    private ConcertJpaRepository concertJpaRepository;
 
     @Autowired
     private ConcertQueueTokenFacade concertQueueTokenFacade;
@@ -45,12 +45,12 @@ class QueueTokenConcurrencyTest {
         queueTokenJpaRepository.deleteAllInBatch();
     }
 
-    @DisplayName("동시에 여러 요청이 오더라고 토큰한 콘서트당 하나만 존재한다.")
+    @DisplayName("동시에 여러 요청이 오더라고 토큰은 콘서트당 하나만 존재한다.")
     @Test
     void testConcurrentIssueQueueToken() throws InterruptedException {
         // given
-        User saveUse = UserJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert concert = ConcertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
+        User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
+        Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
         int numberOfThreads = 10;
 
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);

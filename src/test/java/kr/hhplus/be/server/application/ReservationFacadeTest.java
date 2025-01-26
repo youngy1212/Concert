@@ -19,6 +19,7 @@ import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
 import kr.hhplus.be.server.infrastructure.payment.PaymentJpaRepository;
 import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
 import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
+import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,13 +41,13 @@ class ReservationFacadeTest {
     private ReservationFacade reservationFacade;
 
     @Autowired
-    private UserJpaRepository UserJpaRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
-    private ConcertJpaRepository ConcertJpaRepository;
+    private ConcertJpaRepository concertJpaRepository;
 
     @Autowired
-    private ConcertScheduleJpaRepository ConcertScheduleJpaRepository;
+    private ConcertScheduleJpaRepository concertScheduleJpaRepository;
 
     @Autowired
     private SeatJpaRepository seatJpaRepository;
@@ -59,6 +60,8 @@ class ReservationFacadeTest {
 
     @Autowired
     private PaymentJpaRepository paymentJpaRepository;
+    @Autowired
+    private PointJpaRepository pointJpaRepository;
 
 
     @BeforeEach
@@ -67,9 +70,10 @@ class ReservationFacadeTest {
         paymentJpaRepository.deleteAllInBatch();
         reservationJpaRepository.deleteAllInBatch();
         seatJpaRepository.deleteAllInBatch();
-        ConcertScheduleJpaRepository.deleteAllInBatch();
-        ConcertJpaRepository.deleteAllInBatch();
-        UserJpaRepository.deleteAllInBatch();
+        concertScheduleJpaRepository.deleteAllInBatch();
+        concertJpaRepository.deleteAllInBatch();
+        pointJpaRepository.deleteAllInBatch();
+        userJpaRepository.deleteAllInBatch();
 
     }
 
@@ -78,8 +82,8 @@ class ReservationFacadeTest {
     void reserveSeatNotUser() {
 
         // given
-        Concert concert = ConcertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = ConcertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
+        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
         String tokenId = "TOKEN_ID";
         long userId = 9999L;
@@ -97,9 +101,9 @@ class ReservationFacadeTest {
     void reserveSeatNotConcertSchedule() {
 
         // given
-        User saveUse = UserJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert concert = ConcertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = ConcertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
+        User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
+        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
         String tokenId = "TOKEN_ID";
         long ConcertSchedule = 9999L;
@@ -118,14 +122,12 @@ class ReservationFacadeTest {
     void reserveSeatAlreadyReserved() {
 
         // given
-        User saveUse = UserJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert concert = ConcertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = ConcertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
+        User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
+        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
         String tokenId = "TOKEN_ID";
         Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule,saveUse,seat,tokenId));
-
-
 
         // when //then
         assertThatThrownBy(()-> reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
@@ -140,9 +142,9 @@ class ReservationFacadeTest {
     void reserveSeatSuccess() {
 
         // given
-        User saveUse = UserJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert concert = ConcertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = ConcertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
+        User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
+        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.AVAILABLE, 2000L, concertSchedule));
         String tokenId = "TOKEN_ID";
 

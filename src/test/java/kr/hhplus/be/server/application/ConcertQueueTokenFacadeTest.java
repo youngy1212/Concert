@@ -8,8 +8,13 @@ import kr.hhplus.be.server.application.dto.QueueTokenDto;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
+import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
+import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
+import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
+import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +29,38 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class ConcertQueueTokenFacadeTest {
 
     @Autowired
-    private UserJpaRepository UserJpaRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
-    private ConcertJpaRepository ConcertJpaRepository;
+    private ConcertJpaRepository concertJpaRepository;
 
     @Autowired
     private ConcertQueueTokenFacade concertQueueTokenFacade;
+    @Autowired
+    private ConcertScheduleJpaRepository concertScheduleJpaRepository;
+    @Autowired
+    private QueueTokenJpaRepository queueTokenJpaRepository;
+    @Autowired
+    private PointJpaRepository pointJpaRepository;
+    @Autowired
+    private SeatJpaRepository seatJpaRepository;
+
+    @BeforeEach
+    void tearDown() {
+        queueTokenJpaRepository.deleteAllInBatch();
+        seatJpaRepository.deleteAllInBatch();
+        concertScheduleJpaRepository.deleteAllInBatch();
+        concertJpaRepository.deleteAllInBatch();
+        pointJpaRepository.deleteAllInBatch();
+        userJpaRepository.deleteAllInBatch();
+    }
 
     @DisplayName("토큰 정상 발급 확인")
     @Test
     void testIssueQueueToken() {
         // given
-        User save = UserJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert SaveConcert = ConcertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
+        User save = userJpaRepository.save(User.create("유저", "eamil@naemver"));
+        Concert SaveConcert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
 
         // when
         QueueTokenDto tokenResponse = concertQueueTokenFacade.issueQueueToken(save.getId(), SaveConcert.getId());
@@ -53,7 +76,7 @@ class ConcertQueueTokenFacadeTest {
     public void testIssueQueueTokenConcertNotFound() {
         // given
         long concertId = 2L;
-        User save = UserJpaRepository.save(User.create("유저", "eamil@naemver"));
+        User save = userJpaRepository.save(User.create("유저", "eamil@naemver"));
 
         // when //then
         assertThatThrownBy(()-> concertQueueTokenFacade.issueQueueToken(save.getId(),concertId))
@@ -67,7 +90,7 @@ class ConcertQueueTokenFacadeTest {
     public void issueQueueTokenUserNotFound() {
         // given
         long userId = 99L;
-        Concert SaveConcert = ConcertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
+        Concert SaveConcert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
 
         // when //then
         assertThatThrownBy(()-> concertQueueTokenFacade.issueQueueToken(userId,SaveConcert.getId()))
