@@ -10,18 +10,18 @@ public class PaymentReservationRequest {
     private Long userId;
     private Long seatId;
     private String tokenId;
-    private Long temporaryReservationId;
+    private Long reservationId;
     private Long concertScheduleId;
     private String paymentData;
 
     @Builder
-    public PaymentReservationRequest(Long userId, Long seatId, String tokenId, Long temporaryReservationId,
+    public PaymentReservationRequest(Long userId, Long seatId, String tokenId, Long reservationId,
                                      Long concertScheduleId,
                                      String paymentData) {
         this.userId = userId;
         this.seatId = seatId;
         this.tokenId = tokenId;
-        this.temporaryReservationId = temporaryReservationId;
+        this.reservationId = reservationId;
         this.concertScheduleId = concertScheduleId;
         this.paymentData = paymentData;
     }
@@ -31,7 +31,7 @@ public class PaymentReservationRequest {
                 .userId(userId)
                 .seatId(seatId)
                 .tokenId(tokenId)
-                .temporaryReservationId(temporaryReservationId)
+                .reservationId(reservationId)
                 .concertScheduleId(concertScheduleId)
                 .paymentData(paymentData)
                 .build();
