@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import kr.hhplus.be.server.domain.common.entity.BaseEntity;
+import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.user.model.User;
@@ -21,6 +22,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Getter
@@ -94,5 +96,17 @@ public class Reservation extends BaseEntity {
     public void expired() {
         this.status = ReservationStatus.EXPIRED;
     }
+
+    // 예약 정보 검증
+    public void validateReservation(User user, Seat seat) {
+        if (!this.user.equals(user)) {
+            throw new CustomException(HttpStatus.CONFLICT, "예약 정보가 일치하지 않습니다.");
+        }
+
+        if (!this.seat.equals(seat)) {
+            throw new CustomException(HttpStatus.CONFLICT, "예약 정보가 일치하지 않습니다.");
+        }
+    }
+
 
 }
