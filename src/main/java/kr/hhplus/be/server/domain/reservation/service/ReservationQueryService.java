@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.reservation.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.reservation.model.ReservationStatus;
 import kr.hhplus.be.server.domain.reservation.repository.ReservationQuery;
@@ -20,7 +21,13 @@ public class ReservationQueryService {
 
     }
 
-    public boolean existingReservation(final Long concertScheduleId, final Long seatId, List<ReservationStatus> statuses) {
-        return reservationQuery.existingReservation(concertScheduleId,seatId,statuses );
+    public void existingReservation(final Long concertScheduleId, final Long seatId) {
+
+        List<ReservationStatus> statuses = List.of(ReservationStatus.RESERVED, ReservationStatus.BOOKED);
+        boolean existing = reservationQuery.existingReservation(concertScheduleId,seatId,statuses);
+
+        if (existing) {
+            throw new CustomException("이미 선택된 좌석입니다.");
+        }
     }
 }
