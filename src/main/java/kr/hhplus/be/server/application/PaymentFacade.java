@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.application;
 
 import kr.hhplus.be.server.application.dto.PaymentReservationDto;
-import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
@@ -14,14 +13,12 @@ import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
 import kr.hhplus.be.server.infrastructure.gateway.PaySystem;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentFacade {
-
 
     //좌석 예약
     private final ReservationCommandService reservationCommandService;
@@ -34,23 +31,13 @@ public class PaymentFacade {
     public PaymentReservationDto completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long ReservationId, String paymentData) {
 
         User user = userQueryService.getUserById(userId);
-        Reservation reservation = reservationCommandService.findByLock(ReservationId); //락
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);
         Seat seat = concertQueryService.getSeat(seatId);
 
-        if(!seat.getId().equals(reservation.getSeat().getId())){
-            throw new CustomException(HttpStatus.CONFLICT, "예약 정보가 일치하지 않습니다.");
-        }
+        Reservation reservation = reservationCommandService.findByLock(ReservationId); //락
 
-        if(!user.getId().equals(reservation.getUser().getId())){
-            throw new CustomException(HttpStatus.CONFLICT, "예약 정보가 일치하지 않습니다.");
-        }
-
-        boolean pay = PaySystem.pay(seat.getPrice());
-
-        if(!pay){  //결제 실패시
-            throw new CustomException(HttpStatus.PAYMENT_REQUIRED, "결제에 실패하였습니다.");
-        }
+        reservation.validateReservation(user, seat);
+        PaySystem.pay(seat.getPrice());
 
         //결제 성공시
         reservation.book();
