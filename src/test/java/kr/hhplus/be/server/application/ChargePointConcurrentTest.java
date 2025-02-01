@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import kr.hhplus.be.server.domain.user.model.Point;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.service.UserCommandService;
+import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
 import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
@@ -39,8 +40,12 @@ class ChargePointConcurrentTest {
     @Autowired
     private QueueTokenJpaRepository queueTokenJpaRepository;
 
+    @Autowired
+    private ReservationJpaRepository reservationJpaRepository;
+
     @BeforeEach
     void tearDown() {
+        reservationJpaRepository.deleteAllInBatch();
         queueTokenJpaRepository.deleteAllInBatch();
         pointJpaRepository.deleteAllInBatch();
         userJpaRepository.deleteAllInBatch();
