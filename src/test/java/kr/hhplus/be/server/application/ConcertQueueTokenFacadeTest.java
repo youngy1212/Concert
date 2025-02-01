@@ -10,6 +10,7 @@ import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
+import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
 import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
@@ -44,9 +45,12 @@ class ConcertQueueTokenFacadeTest {
     private PointJpaRepository pointJpaRepository;
     @Autowired
     private SeatJpaRepository seatJpaRepository;
+    @Autowired
+    private ReservationJpaRepository reservationJpaRepository;
 
     @BeforeEach
     void tearDown() {
+        reservationJpaRepository.deleteAllInBatch();
         queueTokenJpaRepository.deleteAllInBatch();
         seatJpaRepository.deleteAllInBatch();
         concertScheduleJpaRepository.deleteAllInBatch();
