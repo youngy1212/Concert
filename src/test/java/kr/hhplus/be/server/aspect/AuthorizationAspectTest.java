@@ -78,7 +78,7 @@ class AuthorizationAspectTest {
                 .seatId(seat.getId())
                 .tokenId(queueToken.getQueueTokenId())
                 .userId(saveUse.getId())
-                .temporaryReservationId(reservation.getId())
+                .reservationId(reservation.getId())
                 .concertScheduleId(concertSchedule.getId())
                 .paymentData("data")
                 .build();
@@ -113,7 +113,7 @@ class AuthorizationAspectTest {
                 .seatId(seat.getId())
                 .tokenId(queueToken.getQueueTokenId())
                 .userId(saveUse.getId())
-                .temporaryReservationId(reservation.getId())
+                .reservationId(reservation.getId())
                 .concertScheduleId(concertSchedule.getId())
                 .paymentData("data")
                 .build();
@@ -151,7 +151,7 @@ class AuthorizationAspectTest {
                 .seatId(seat.getId())
                 .tokenId(queueToken.getQueueTokenId())
                 .userId(saveUse.getId())
-                .temporaryReservationId(reservation.getId())
+                .reservationId(reservation.getId())
                 .concertScheduleId(concertSchedule.getId())
                 .paymentData("data")
                 .build();

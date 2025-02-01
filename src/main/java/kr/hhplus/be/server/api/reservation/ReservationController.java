@@ -38,7 +38,7 @@ public class ReservationController implements SwaggerReservationController {
     public ResponseEntity<CompleteReservationResponse> reservationSeat(@RequestBody PaymentReservationRequest request){
         PaymentReservationDto paymentReservationDto = paymentFacade.completeReservation(request.getUserId(),
                 request.getConcertScheduleId(), request.getSeatId()
-                , request.getTokenId(), request.getTemporaryReservationId(), request.getPaymentData());
+                , request.getTokenId(), request.getReservationId(), request.getPaymentData());
         return ResponseEntity.ok(CompleteReservationResponse.of(paymentReservationDto.concertScheduleId(), paymentReservationDto.userId(),
                 paymentReservationDto.seatId(), paymentReservationDto.paymentId(), paymentReservationDto.amount()));
     }
