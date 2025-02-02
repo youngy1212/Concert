@@ -3,7 +3,7 @@ package kr.hhplus.be.server.api.token;
 import kr.hhplus.be.server.api.token.dto.SwaggerTokenController;
 import kr.hhplus.be.server.api.token.dto.TokenResponse;
 import kr.hhplus.be.server.application.ConcertQueueTokenFacade;
-import kr.hhplus.be.server.application.dto.QueueTokenDto;
+import kr.hhplus.be.server.application.dto.QueueTokenInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +21,8 @@ public class TokenController implements SwaggerTokenController {
             @PathVariable Long userId,
             @PathVariable Long concertId
     ){
-        QueueTokenDto queueTokenDto = concertQueueTokenFacade.issueQueueToken(userId, concertId);
-        return ResponseEntity.ok(TokenResponse.of(queueTokenDto.queueTokenId(), queueTokenDto.expiresAt()));
+        QueueTokenInfo queueTokenInfo = concertQueueTokenFacade.issueQueueToken(userId, concertId);
+        return ResponseEntity.ok(TokenResponse.of(queueTokenInfo.queueTokenId(), queueTokenInfo.expiresAt()));
     }
 
 }

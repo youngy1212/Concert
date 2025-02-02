@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 import kr.hhplus.be.server.domain.user.model.Point;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.repository.UserQuery;
-import kr.hhplus.be.server.domain.user.service.dto.ChargeDto;
+import kr.hhplus.be.server.domain.user.service.dto.ChargeInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +22,9 @@ public class UserQueryService {
     }
 
     @Transactional(readOnly = true)
-    public ChargeDto getPoint(Long userId) {
+    public ChargeInfo getPoint(Long userId) {
         Point point = userQuery.findByPoint(userId).orElseThrow(() -> new NoSuchElementException("포인트를 찾을 수 없습니다."));
-        return new ChargeDto(point.getUser().getId(), point.getAmount());
+        return new ChargeInfo(point.getUser().getId(), point.getAmount());
     }
 
 }

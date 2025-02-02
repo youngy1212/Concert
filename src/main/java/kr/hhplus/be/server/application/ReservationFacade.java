@@ -2,7 +2,7 @@ package kr.hhplus.be.server.application;
 
 
 import kr.hhplus.be.server.annotation.DistributedLock;
-import kr.hhplus.be.server.application.dto.ReservationDto;
+import kr.hhplus.be.server.application.dto.ReservationInfo;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
@@ -28,7 +28,7 @@ public class ReservationFacade {
 
     @DistributedLock(key = "'reservation:' + #concertScheduleId + ':' + #seatId")
     @Transactional
-    public ReservationDto reserveSeat(Long userId, Long seatId , Long concertScheduleId, String tokenId) {
+    public ReservationInfo reserveSeat(Long userId, Long seatId , Long concertScheduleId, String tokenId) {
 
         User user = userQueryService.getUserById(userId);
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(concertScheduleId);
@@ -38,7 +38,7 @@ public class ReservationFacade {
         Reservation reservation = reservationCommandService.createReservation(concertSchedule, user,
                 seat, tokenId);
 
-        return new ReservationDto(reservation.getId(),reservation.getSeat().getId());
+        return new ReservationInfo(reservation.getId(),reservation.getSeat().getId());
     }
 
 

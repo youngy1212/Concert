@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.util.NoSuchElementException;
-import kr.hhplus.be.server.application.dto.QueueTokenDto;
+import kr.hhplus.be.server.application.dto.QueueTokenInfo;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
@@ -67,7 +67,7 @@ class ConcertQueueTokenFacadeTest {
         Concert SaveConcert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
 
         // when
-        QueueTokenDto tokenResponse = concertQueueTokenFacade.issueQueueToken(save.getId(), SaveConcert.getId());
+        QueueTokenInfo tokenResponse = concertQueueTokenFacade.issueQueueToken(save.getId(), SaveConcert.getId());
 
         // then
         assertThat(tokenResponse).isNotNull();

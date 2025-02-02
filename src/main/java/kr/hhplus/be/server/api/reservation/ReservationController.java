@@ -8,8 +8,8 @@ import kr.hhplus.be.server.api.reservation.dto.ReservationResponse;
 import kr.hhplus.be.server.api.reservation.dto.SwaggerReservationController;
 import kr.hhplus.be.server.application.PaymentFacade;
 import kr.hhplus.be.server.application.ReservationFacade;
-import kr.hhplus.be.server.application.dto.PaymentReservationDto;
-import kr.hhplus.be.server.application.dto.ReservationDto;
+import kr.hhplus.be.server.application.dto.PaymentReservationInfo;
+import kr.hhplus.be.server.application.dto.ReservationInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,19 +28,19 @@ public class ReservationController implements SwaggerReservationController {
     public ResponseEntity<ReservationResponse> reservationSeat(
             @RequestBody ReservationRequest request
     ){
-        ReservationDto reservationDto = reservationFacade.reserveSeat(
+        ReservationInfo reservationInfo = reservationFacade.reserveSeat(
                 request.getUserId(), request.getSeatId(), request.getConcertScheduleId(), request.getTokenId());
-        return ResponseEntity.ok(ReservationResponse.of(reservationDto.reservationId(),reservationDto.seatId()));
+        return ResponseEntity.ok(ReservationResponse.of(reservationInfo.reservationId(), reservationInfo.seatId()));
     }
 
     @AuthorizationHeader
     @PostMapping("/reservation/payment")
     public ResponseEntity<CompleteReservationResponse> reservationSeat(@RequestBody PaymentReservationRequest request){
-        PaymentReservationDto paymentReservationDto = paymentFacade.completeReservation(request.getUserId(),
+        PaymentReservationInfo paymentReservationInfo = paymentFacade.completeReservation(request.getUserId(),
                 request.getConcertScheduleId(), request.getSeatId()
                 , request.getTokenId(), request.getReservationId(), request.getPaymentData());
-        return ResponseEntity.ok(CompleteReservationResponse.of(paymentReservationDto.concertScheduleId(), paymentReservationDto.userId(),
-                paymentReservationDto.seatId(), paymentReservationDto.paymentId(), paymentReservationDto.amount()));
+        return ResponseEntity.ok(CompleteReservationResponse.of(paymentReservationInfo.concertScheduleId(), paymentReservationInfo.userId(),
+                paymentReservationInfo.seatId(), paymentReservationInfo.paymentId(), paymentReservationInfo.amount()));
     }
 
 }

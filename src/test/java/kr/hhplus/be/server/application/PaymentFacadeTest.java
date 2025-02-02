@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDateTime;
-import kr.hhplus.be.server.application.dto.PaymentReservationDto;
+import kr.hhplus.be.server.application.dto.PaymentReservationInfo;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
@@ -90,13 +90,13 @@ class PaymentFacadeTest {
 
 
         // When
-        PaymentReservationDto paymentReservationDto = paymentFacade.completeReservation(
+        PaymentReservationInfo paymentReservationInfo = paymentFacade.completeReservation(
                 saveUse.getId(), concertSchedule.getId(), seat.getId() , queueToken.getQueueTokenId(), reservation.getId(),payData);
 
 
         // Then
-        assertNotNull(paymentReservationDto);
-        assertThat(paymentReservationDto.seatId()).isEqualTo(seat.getId());
+        assertNotNull(paymentReservationInfo);
+        assertThat(paymentReservationInfo.seatId()).isEqualTo(seat.getId());
 
     }
 

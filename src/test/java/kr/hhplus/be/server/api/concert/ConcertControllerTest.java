@@ -12,8 +12,8 @@ import java.util.List;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
-import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateDto;
-import kr.hhplus.be.server.domain.concert.service.dto.SeatDto;
+import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
+import kr.hhplus.be.server.domain.concert.service.dto.SeatInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ class ConcertControllerTest {
 
         List<ConcertSchedule> schedules = List.of(concertSchedule, concertSchedule2);
 
-        ConcertDateDto chargeDto = new ConcertDateDto(schedules);
+        ConcertDateInfo chargeDto = new ConcertDateInfo(schedules);
         when(concertQueryService.getAllConcertSchedule(concertId)).thenReturn(chargeDto);
 
         // when // then
@@ -61,8 +61,8 @@ class ConcertControllerTest {
         // given
         long concertScheduleId = 3L;
         List<Long> seatIds = List.of(1L, 2L);
-        SeatDto seatDto = new SeatDto(seatIds);
-        when(concertQueryService.getConcertSeats(concertScheduleId)).thenReturn(seatDto);
+        SeatInfo seatInfo = new SeatInfo(seatIds);
+        when(concertQueryService.getConcertSeats(concertScheduleId)).thenReturn(seatInfo);
 
         // when // then
         mockMvc.perform(get("/concert/seats/{concertScheduleId}",concertScheduleId))
