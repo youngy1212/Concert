@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
-import kr.hhplus.be.server.application.dto.ReservationDto;
+import kr.hhplus.be.server.application.dto.ReservationInfo;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
@@ -127,7 +127,7 @@ class ReservationFacadeTest {
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
         String tokenId = "TOKEN_ID";
-        Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule,saveUse,seat,tokenId));
+        reservationJpaRepository.save(Reservation.create(concertSchedule,saveUse,seat,tokenId));
 
         // when //then
         assertThatThrownBy(()-> reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
@@ -149,10 +149,10 @@ class ReservationFacadeTest {
         String tokenId = "TOKEN_ID";
 
         // when
-        ReservationDto ReservationDto = reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
+        ReservationInfo ReservationInfo = reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
                 concertSchedule.getId(), tokenId);
 
-        assertNotNull(ReservationDto);
+        assertNotNull(ReservationInfo);
 
     }
 

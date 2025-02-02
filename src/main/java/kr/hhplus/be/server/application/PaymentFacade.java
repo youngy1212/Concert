@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.application;
 
-import kr.hhplus.be.server.application.dto.PaymentReservationDto;
+import kr.hhplus.be.server.application.dto.PaymentReservationInfo;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
@@ -28,7 +28,7 @@ public class PaymentFacade {
 
     //예약 및 결제 완료
     @Transactional
-    public PaymentReservationDto completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long ReservationId, String paymentData) {
+    public PaymentReservationInfo completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long ReservationId, String paymentData) {
 
         User user = userQueryService.getUserById(userId);
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);
@@ -42,7 +42,7 @@ public class PaymentFacade {
         //결제 성공시
         reservation.book();
         Payment payment = paymentCommandService.savePayment(user, reservation, seat.getPrice(), PaymentStatus.SUCCESS);
-        return new PaymentReservationDto(concertSchedule.getId(),user.getId(), seat.getId(), payment.getId(), payment.getAmount());
+        return new PaymentReservationInfo(concertSchedule.getId(),user.getId(), seat.getId(), payment.getId(), payment.getAmount());
 
     }
 }

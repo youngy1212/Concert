@@ -15,8 +15,8 @@ import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.repository.ConcertQuery;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
-import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateDto;
-import kr.hhplus.be.server.domain.concert.service.dto.SeatDto;
+import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
+import kr.hhplus.be.server.domain.concert.service.dto.SeatInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,12 +75,12 @@ class ConcertQueryServiceTest {
         when(concertQuery.findAllByConcertId(concertId)).thenReturn(schedules);
 
         // when
-        ConcertDateDto concertDateDto = concertQueryService.getAllConcertSchedule(concertId);
+        ConcertDateInfo concertDateInfo = concertQueryService.getAllConcertSchedule(concertId);
 
         // then
-        assertThat(concertDateDto.concertSchedules().get(0).getConcertDate())
+        assertThat(concertDateInfo.concertSchedules().get(0).getConcertDate())
                 .isEqualTo(LocalDateTime.of(2024, 12, 12, 8, 50));
-        assertThat(concertDateDto.concertSchedules().get(1).getConcertDate())
+        assertThat(concertDateInfo.concertSchedules().get(1).getConcertDate())
                 .isEqualTo(LocalDateTime.of(2024, 12, 13, 8, 50));
 
 
@@ -109,7 +109,7 @@ class ConcertQueryServiceTest {
         when(concertQuery.findByConcertScheduleId(concertScheduleId)).thenReturn(seatIds);
 
         // when
-        SeatDto concertSeats = concertQueryService.getConcertSeats(concertScheduleId);
+        SeatInfo concertSeats = concertQueryService.getConcertSeats(concertScheduleId);
 
         //then
         assertThat(concertSeats.seatIds()).hasSize(2);

@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 import kr.hhplus.be.server.application.ConcertQueueTokenFacade;
-import kr.hhplus.be.server.application.dto.QueueTokenDto;
+import kr.hhplus.be.server.application.dto.QueueTokenInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ class TokenControllerTest {
         String queueTokenId = "TOKEN_UUID";
         LocalDateTime expiresAt = LocalDateTime.now();
 
-        QueueTokenDto queueTokenDto = new QueueTokenDto(queueTokenId, userId,concertId,expiresAt);
-        when(concertQueueTokenFacade.issueQueueToken(userId, concertId)).thenReturn(queueTokenDto);
+        QueueTokenInfo queueTokenInfo = new QueueTokenInfo(queueTokenId, userId,concertId,expiresAt);
+        when(concertQueueTokenFacade.issueQueueToken(userId, concertId)).thenReturn(queueTokenInfo);
 
         // when // then
         mockMvc.perform(get("/tokens/{userId}/{concertId}", userId, concertId))

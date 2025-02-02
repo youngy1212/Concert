@@ -7,8 +7,8 @@ import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.concert.repository.ConcertQuery;
-import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateDto;
-import kr.hhplus.be.server.domain.concert.service.dto.SeatDto;
+import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
+import kr.hhplus.be.server.domain.concert.service.dto.SeatInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class ConcertQueryService {
                 .orElseThrow(() -> new NoSuchElementException("좌석을 찾을 수 없습니다."));
     }
 
-    public ConcertDateDto getAllConcertSchedule(final long concertId) {
+    public ConcertDateInfo getAllConcertSchedule(final long concertId) {
 
         List<ConcertSchedule> schedules = concertQuery.findAllByConcertId(concertId);
 
@@ -36,17 +36,17 @@ public class ConcertQueryService {
             throw new CustomException("콘서트의 예약 가능한 날을 찾을 수 없습니다.");
         }
 
-        return new ConcertDateDto(schedules);
+        return new ConcertDateInfo(schedules);
     }
 
-    public SeatDto getConcertSeats(final long concertScheduleId) {
+    public SeatInfo getConcertSeats(final long concertScheduleId) {
         List<Long> seatIds = concertQuery.findByConcertScheduleId(concertScheduleId);
 
         if(seatIds.isEmpty()){
             throw new NoSuchElementException("콘서트의 좌석을 찾을 수 없습니다.");
         }
 
-        return new SeatDto(seatIds);
+        return new SeatInfo(seatIds);
     }
 
     public ConcertSchedule getConcertSchedule(final long concertScheduleId){

@@ -6,8 +6,8 @@ import kr.hhplus.be.server.api.concert.dto.ConcertDateResponse;
 import kr.hhplus.be.server.api.concert.dto.SeatResponse;
 import kr.hhplus.be.server.api.concert.dto.SwaggerConcertController;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
-import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateDto;
-import kr.hhplus.be.server.domain.concert.service.dto.SeatDto;
+import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
+import kr.hhplus.be.server.domain.concert.service.dto.SeatInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ public class ConcertController implements SwaggerConcertController {
     @GetMapping("/concert/date/{concertId}")
     public ResponseEntity<List<ConcertDateResponse>> getConcertDates(
             @PathVariable Long concertId){
-        ConcertDateDto concertSchedule = concertQueryService.getAllConcertSchedule(concertId);
+        ConcertDateInfo concertSchedule = concertQueryService.getAllConcertSchedule(concertId);
         List<ConcertDateResponse> responseList = concertSchedule.concertSchedules().stream()
                 .map(ConcertDateResponse::of)
                 .toList();
@@ -36,7 +36,7 @@ public class ConcertController implements SwaggerConcertController {
     public ResponseEntity<SeatResponse> getConcertSeats(
             @PathVariable Long concertScheduleId
     ){
-        SeatDto concertSeats = concertQueryService.getConcertSeats(concertScheduleId);
+        SeatInfo concertSeats = concertQueryService.getConcertSeats(concertScheduleId);
         return ResponseEntity.ok(SeatResponse.of(concertSeats.seatIds()));
     }
 

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.api.user.dto.ChargeRequest;
 import kr.hhplus.be.server.domain.user.service.UserCommandService;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
-import kr.hhplus.be.server.domain.user.service.dto.ChargeDto;
+import kr.hhplus.be.server.domain.user.service.dto.ChargeInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +49,8 @@ class PointControllerTest {
                 .amount(amount)
                 .build();
 
-        ChargeDto chargeDto = new ChargeDto(userId, amount);
-        when(userCommandService.chargePoint(userId, amount)).thenReturn(chargeDto);
+        ChargeInfo chargeInfo = new ChargeInfo(userId, amount);
+        when(userCommandService.chargePoint(userId, amount)).thenReturn(chargeInfo);
 
         // when // then
         mockMvc.perform(post("/point/charge")
@@ -70,8 +70,8 @@ class PointControllerTest {
         Long userId = 1L;
         Long amount = 10000L;
 
-        ChargeDto chargeDto = new ChargeDto(userId, amount);
-        when(userQueryService.getPoint(userId)).thenReturn(chargeDto);
+        ChargeInfo chargeInfo = new ChargeInfo(userId, amount);
+        when(userQueryService.getPoint(userId)).thenReturn(chargeInfo);
 
         // when // then
         mockMvc.perform(get("/point/{userId}",userId))
@@ -92,8 +92,8 @@ class PointControllerTest {
                 .amount(amount)
                 .build();
 
-        ChargeDto chargeDto = new ChargeDto(userId, amount);
-        when(userCommandService.chargePoint(userId, amount)).thenReturn(chargeDto);
+        ChargeInfo chargeInfo = new ChargeInfo(userId, amount);
+        when(userCommandService.chargePoint(userId, amount)).thenReturn(chargeInfo);
 
         // when // then
         mockMvc.perform(post("/point/charge")
