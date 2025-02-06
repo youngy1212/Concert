@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import kr.hhplus.be.server.application.ConcertQueueTokenFacade;
 import kr.hhplus.be.server.application.dto.QueueTokenInfo;
+import kr.hhplus.be.server.domain.token.service.QueueService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ class TokenControllerTest {
 
     @MockitoBean
     private ConcertQueueTokenFacade concertQueueTokenFacade;
+
+    @MockitoBean
+    private QueueService queueService;
 
     @DisplayName("토큰 발급한다. TokenResponse 리턴")
     @Test
@@ -42,6 +46,20 @@ class TokenControllerTest {
                 .andExpect(jsonPath("$.tokenId").value(queueTokenId));
     }
 
+    @DisplayName("대기열을 등록한다. WaitingQueueResponse 리턴")
+    @Test
+    void waitingQueueRankResponse() throws Exception {
+        // given
+        long userId = 1L;
+        Long rank = 2L;
 
+        when(queueService.addWaitingQueue(String.valueOf(userId))).thenReturn(rank);
+
+        // when // then
+        mockMvc.perform(get("/waitingQueue/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(userId))
+                .andExpect(jsonPath("$.rank").value(rank));
+    }
 
 }
