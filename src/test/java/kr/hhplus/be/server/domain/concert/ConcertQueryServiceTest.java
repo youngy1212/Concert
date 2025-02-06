@@ -23,6 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 @ExtendWith(MockitoExtension.class)
 class ConcertQueryServiceTest {
@@ -32,6 +34,12 @@ class ConcertQueryServiceTest {
 
     @InjectMocks
     ConcertQueryService concertQueryService;
+
+    @Mock
+    RedisTemplate<String, Object> redisTemplate;
+
+    @Mock
+    private ValueOperations<String, Object> valueOps;
 
     @DisplayName("공연 정보가 없어서 오류 발생")
     @Test
@@ -53,13 +61,16 @@ class ConcertQueryServiceTest {
     void ConcertScheduleNotFound() {
         // given
         long concertId = 1L;
+        String key = "concert:schedule:" + concertId;
+
+        when(redisTemplate.opsForValue()).thenReturn(valueOps);
+        when(valueOps.get(key)).thenReturn(null);
         when(concertQuery.findAllByConcertId(concertId)).thenReturn(Collections.emptyList());
 
         // when // then
         assertThatThrownBy(()-> concertQueryService.getAllConcertSchedule(concertId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage("콘서트의 예약 가능한 날을 찾을 수 없습니다.");
-
     }
 
     @DisplayName("콘서트 스케줄을 찾아서 ConcertDateDto 반환")
@@ -67,11 +78,16 @@ class ConcertQueryServiceTest {
     void ConcertScheduleSuccess() {
         // given
         long concertId = 1L;
+        String key = "concert:schedule:" + concertId;
+
         Concert concert = Concert.create("콘서트", "고척돔");
         ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024, 12, 12, 8, 50));
         ConcertSchedule concertSchedule2 = ConcertSchedule.create(concert,LocalDateTime.of(2024,12,13,8,50));
 
         List<ConcertSchedule> schedules = List.of(concertSchedule, concertSchedule2);
+
+        when(redisTemplate.opsForValue()).thenReturn(valueOps);
+        when(valueOps.get(key)).thenReturn(null);
         when(concertQuery.findAllByConcertId(concertId)).thenReturn(schedules);
 
         // when
@@ -91,6 +107,9 @@ class ConcertQueryServiceTest {
     void ConcertSeatNotFound() {
         // given
         long concertScheduleId = 3L;
+        String key = "concert:seats:" + concertScheduleId;
+        when(redisTemplate.opsForValue()).thenReturn(valueOps);
+        when(valueOps.get(key)).thenReturn(null);
         when(concertQuery.findByConcertScheduleId(concertScheduleId)).thenReturn(Collections.emptyList());
 
         // when // then
@@ -106,6 +125,9 @@ class ConcertQueryServiceTest {
         // given
         long concertScheduleId = 3L;
         List<Long> seatIds = List.of(1L, 2L);
+        String key = "concert:seats:" + concertScheduleId;
+        when(redisTemplate.opsForValue()).thenReturn(valueOps);
+        when(valueOps.get(key)).thenReturn(null);
         when(concertQuery.findByConcertScheduleId(concertScheduleId)).thenReturn(seatIds);
 
         // when
@@ -130,9 +152,6 @@ class ConcertQueryServiceTest {
                 .hasMessage("좌석을 찾을 수 없습니다.");
 
     }
-
-
-
 
 
 }
