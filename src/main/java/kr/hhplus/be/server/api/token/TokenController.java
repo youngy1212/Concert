@@ -28,11 +28,12 @@ public class TokenController implements SwaggerTokenController {
         return ResponseEntity.ok(TokenResponse.of(queueTokenInfo.queueTokenId(), queueTokenInfo.expiresAt()));
     }
 
-    @GetMapping("/waitingQueue/{userId}")
+    @GetMapping("/waitingQueue/{userId}/{concertId}")
     public ResponseEntity<WaitingQueueResponse> waitingQueue(
-            @PathVariable Long userId
+            @PathVariable Long userId,
+            @PathVariable Long concertId
     ){
-        Long rank = queueService.addWaitingQueue(String.valueOf(userId));
+        Long rank = queueService.addWaitingQueue(String.valueOf(userId),String.valueOf(concertId));
         return ResponseEntity.ok(WaitingQueueResponse.of(userId, rank));
     }
 

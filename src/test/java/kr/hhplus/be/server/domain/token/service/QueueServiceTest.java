@@ -34,9 +34,10 @@ class QueueServiceTest {
     void testAddTokenToWaitingQueue() {
         // given
         String userId = "user1";
+        String concertId = "concert1";
 
         // when
-        queueService.addWaitingQueue(userId);
+        queueService.addWaitingQueue(userId,concertId);
 
         // then
         Double score = redisTemplate.opsForZSet().score("waiting-tokens", userId);
@@ -47,8 +48,8 @@ class QueueServiceTest {
     @Test
     void testTransferTokensToActive() {
         // given
-        queueService.addWaitingQueue("user1");
-        queueService.addWaitingQueue("user2");
+        queueService.addWaitingQueue("user1","concert1");
+        queueService.addWaitingQueue("user2","concert2");
 
         // when
         Set<String> activatedUsers = queueService.transferWaitingToActive(2);
@@ -64,15 +65,14 @@ class QueueServiceTest {
 
     }
 
-
     @DisplayName("대기열 진입 후 순위 확인")
     @Test
     void GetWaitingRank() {
         // given
         String userId1 = "user1";
         String userId2 = "user2";
-        queueService.addWaitingQueue(userId1);
-        queueService.addWaitingQueue(userId2);
+        queueService.addWaitingQueue(userId1,"concert1");
+        queueService.addWaitingQueue(userId2,"concert2");
 
         // when
         Long rank1 = queueService.getWaitingRank(userId1);

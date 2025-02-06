@@ -51,12 +51,13 @@ class TokenControllerTest {
     void waitingQueueRankResponse() throws Exception {
         // given
         long userId = 1L;
+        long concertId = 2L;
         Long rank = 2L;
 
-        when(queueService.addWaitingQueue(String.valueOf(userId))).thenReturn(rank);
+        when(queueService.addWaitingQueue(String.valueOf(userId),String.valueOf(concertId))).thenReturn(rank);
 
         // when // then
-        mockMvc.perform(get("/waitingQueue/{userId}", userId))
+        mockMvc.perform(get("/waitingQueue/{userId}/{concertId}", userId,concertId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.rank").value(rank));
