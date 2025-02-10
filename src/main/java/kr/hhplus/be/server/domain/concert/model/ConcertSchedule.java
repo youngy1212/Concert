@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.concert.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,6 +29,7 @@ public class ConcertSchedule extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "concert_id")
+    @JsonIgnore
     private Concert concert;
 
     private LocalDateTime concertDate;
