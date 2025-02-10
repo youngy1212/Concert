@@ -16,7 +16,7 @@ public interface QueueTokenJpaRepository extends JpaRepository<QueueToken, Strin
     List<QueueToken> findTop10ByStatusOrderByEnqueuedAtAsc(QueueTokenStatus status);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT q FROM QueueToken q WHERE q.user.id = :userId AND q.concert.id = :concertId")
+    @Query("SELECT q FROM QueueToken q WHERE q.userId = :userId AND q.concertId = :concertId")
     Optional<QueueToken> findByUserAndConcertLock(@Param("userId") Long userId, @Param("concertId") Long concertId);
 
 }

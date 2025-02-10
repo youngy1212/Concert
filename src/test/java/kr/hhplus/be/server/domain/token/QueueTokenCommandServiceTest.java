@@ -5,12 +5,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.token.model.QueueTokenStatus;
 import kr.hhplus.be.server.domain.token.repository.QueueTokenCommand;
 import kr.hhplus.be.server.domain.token.service.QueueTokenCommandService;
-import kr.hhplus.be.server.domain.user.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,18 +29,18 @@ class QueueTokenCommandServiceTest {
     @Test
     void issueToken_ShouldReturnQueueToken() {
         // given
-        User user = User.create("유저이름", "email.com");
-        Concert concert = Concert.create("공연", "고척돔");
-        QueueToken queueToken = QueueToken.create(user,concert);
+        long userId = 1L;
+        long concertId = 2L;
+        QueueToken queueToken = QueueToken.create(userId,concertId);
 
         when(queueTokenCommand.save(any(QueueToken.class))).thenReturn(queueToken);
 
         // when
-        QueueToken result = queueTokenCommandService.issueToken(user, concert);
+        QueueToken result = queueTokenCommandService.issueToken(userId, concertId);
 
         // then
-        assertEquals(user.getName(), result.getUser().getName());
-        assertEquals(concert.getTitle(), result.getConcert().getTitle());
+        assertEquals(userId, result.getUserId());
+        assertEquals(concertId, result.getConcertId());
         assertEquals(result.getStatus(), QueueTokenStatus.PENDING);
         verify(queueTokenCommand).save(any(QueueToken.class));
 

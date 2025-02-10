@@ -36,11 +36,11 @@ public class ConcertQueueTokenFacade {
         if (findToken.isPresent()) { //토큰이 있을때
             QueueToken token = findToken.get();
             token.tokenActive(LocalDateTime.now()); //현재 시간으로 다시 활성화
-            return new QueueTokenInfo(token.getQueueTokenId(), token.getUser().getId(), token.getConcert().getId(), token.getExpiresAt());
+            return new QueueTokenInfo(token.getQueueTokenId(),userId,concertId, token.getExpiresAt());
         }
         //없을때
-        QueueToken queueToken = queueTokenCommandService.issueToken(user, concert);
-        return  new QueueTokenInfo(queueToken.getQueueTokenId(), queueToken.getUser().getId(), queueToken.getConcert().getId(), queueToken.getExpiresAt());
+        QueueToken queueToken = queueTokenCommandService.issueToken(userId, concertId);
+        return  new QueueTokenInfo(queueToken.getQueueTokenId(), userId, concertId, queueToken.getExpiresAt());
 
     }
 

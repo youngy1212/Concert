@@ -7,10 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
-import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.token.model.QueueTokenStatus;
-import kr.hhplus.be.server.domain.user.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +17,10 @@ class QueueTokenTest {
     @DisplayName("PENDING인 토큰을 호출하여 ACTIVE 변경한다. expiresAt가 10분뒤로 설정되는지 확인한다.")
     @Test
     void testTokenActive() {
-        // given
-        User user = User.create("유저1", "이메일");
-        Concert concert = Concert.create("콘서트 이름", "고척돔");
-        QueueToken queueToken = QueueToken.create(user, concert);
+        // given'
+        long userId = 1L;
+        long concertId = 2L;
+        QueueToken queueToken = QueueToken.create(userId, concertId);
         LocalDateTime now = LocalDateTime.now();
 
         // when
@@ -38,9 +36,9 @@ class QueueTokenTest {
     @Test
     void testTokenActive_AlreadyActive() {
         // given
-        User user = User.create("유저1", "이메일");
-        Concert concert = Concert.create("콘서트 이름", "고척돔");
-        QueueToken queueToken = QueueToken.create( user, concert);
+        long userId = 1L;
+        long concertId = 2L;
+        QueueToken queueToken = QueueToken.create( userId, concertId);
         LocalDateTime now = LocalDateTime.now();
         queueToken.tokenActive(now);
 
@@ -54,9 +52,9 @@ class QueueTokenTest {
     @Test
     void testIsExpired_BeforeNow() {
         // given
-        User user = User.create("유저1", "이메일");
-        Concert concert = Concert.create("콘서트 이름", "올림픽홀");
-        QueueToken queueToken = QueueToken.create( user, concert);
+        long userId = 1L;
+        long concertId = 2L;
+        QueueToken queueToken = QueueToken.create( userId, concertId);
         LocalDateTime now = LocalDateTime.now().minusMonths(10);
         queueToken.tokenActive(now);
 
@@ -71,9 +69,9 @@ class QueueTokenTest {
     @Test
     void testIsExpired_afterNow() {
         // given
-        User user = User.create("유저1", "이메일");
-        Concert concert = Concert.create("콘서트 이름", "올림픽홀");
-        QueueToken queueToken = QueueToken.create(user, concert);
+        long userId = 1L;
+        long concertId = 2L;
+        QueueToken queueToken = QueueToken.create( userId, concertId);
         LocalDateTime now = LocalDateTime.now();
         queueToken.tokenActive(now);
 

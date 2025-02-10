@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
-import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.repository.ConcertQuery;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
 import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
 import kr.hhplus.be.server.domain.concert.service.dto.SeatInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class ConcertQueryServiceTest {
 
@@ -80,9 +81,8 @@ class ConcertQueryServiceTest {
         long concertId = 1L;
         String key = "concert:schedule:" + concertId;
 
-        Concert concert = Concert.create("콘서트", "고척돔");
-        ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024, 12, 12, 8, 50));
-        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concert,LocalDateTime.of(2024,12,13,8,50));
+        ConcertSchedule concertSchedule = ConcertSchedule.create(concertId, LocalDateTime.of(2024, 12, 12, 8, 50));
+        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concertId,LocalDateTime.of(2024,12,13,8,50));
 
         List<ConcertSchedule> schedules = List.of(concertSchedule, concertSchedule2);
 

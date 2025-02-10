@@ -63,7 +63,6 @@ class ChargePointConcurrentTest {
         User user1 = userJpaRepository.save(User.create("유저1", "이이메일"));
         pointJpaRepository.save(Point.create(1000L, user1));
 
-
         int numberOfThreads = 3;
 
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);

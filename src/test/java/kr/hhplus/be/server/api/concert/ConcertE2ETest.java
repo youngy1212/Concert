@@ -62,8 +62,8 @@ class ConcertE2ETest {
         // given
         User use = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use, concert));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert.getId(), LocalDateTime.of(2024,12,12,10,0)));
+        QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use.getId(), concert.getId()));
 
         String url = "http://localhost:" + port + "/concert/date/" + concert.getId();
 
@@ -95,10 +95,10 @@ class ConcertE2ETest {
         // given
         User use = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use, concert));
-        Seat seat1 = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule));
-        Seat seat2 = seatJpaRepository.save(Seat.create(21,  2000L, concertSchedule));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert.getId(), LocalDateTime.of(2024,12,12,10,0)));
+        QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use.getId(), concert.getId()));
+        Seat seat1 = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule.getId()));
+        Seat seat2 = seatJpaRepository.save(Seat.create(21,  2000L, concertSchedule.getId()));
 
 
         String url = "http://localhost:" + port + "/concert/seats/" + concertSchedule.getId();

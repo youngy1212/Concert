@@ -3,18 +3,13 @@ package kr.hhplus.be.server.domain.token.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import kr.hhplus.be.server.domain.common.entity.BaseEntity;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
-import kr.hhplus.be.server.domain.concert.model.Concert;
-import kr.hhplus.be.server.domain.user.model.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,13 +32,9 @@ public class QueueToken extends BaseEntity {
     @Id
     private String queueTokenId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "concert_id")
-    private Concert concert;
+    private Long concertId;
 
     private LocalDateTime expiresAt;
 
@@ -54,32 +45,32 @@ public class QueueToken extends BaseEntity {
 
 
     @Builder
-    public QueueToken(String queueTokenId, User user, Concert concert, LocalDateTime expiresAt,
+    public QueueToken(String queueTokenId, Long userId, Long concertId, LocalDateTime expiresAt,
                       LocalDateTime enqueuedAt,
                       QueueTokenStatus status) {
         this.queueTokenId = queueTokenId;
-        this.user = user;
-        this.concert = concert;
+        this.userId = userId;
+        this.concertId = concertId;
         this.expiresAt = expiresAt;
         this.enqueuedAt = enqueuedAt;
         this.status = status;
     }
 
-    public static QueueToken create(User user, Concert concert) {
+    public static QueueToken create(Long userId, Long concertId) {
         return QueueToken.builder()
                 .queueTokenId(UUID.randomUUID().toString())
-                .user(user)
-                .concert(concert)
+                .userId(userId)
+                .concertId(concertId)
                 .enqueuedAt(LocalDateTime.now())
                 .status(QueueTokenStatus.PENDING)
                 .build();
     }
 
-    public static QueueToken createInTime(User user, Concert concert, LocalDateTime expiresAt) {
+    public static QueueToken createInTime(Long userId, Long concertId, LocalDateTime expiresAt) {
         return QueueToken.builder()
                 .queueTokenId(UUID.randomUUID().toString())
-                .user(user)
-                .concert(concert)
+                .userId(userId)
+                .concertId(concertId)
                 .expiresAt(expiresAt)
                 .status(QueueTokenStatus.PENDING)
                 .build();

@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import kr.hhplus.be.server.application.dto.ReservationInfo;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
-import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
@@ -81,9 +80,9 @@ class ReservationFacadeTest {
     void reserveSeatNotUser() {
 
         // given
-        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule));
+        Long concertId = 1L;
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule.getId()));
         String tokenId = "TOKEN_ID";
         long userId = 9999L;
 
@@ -101,9 +100,9 @@ class ReservationFacadeTest {
 
         // given
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
+        Long concertId = 1L;
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule.getId()));
         String tokenId = "TOKEN_ID";
         long ConcertSchedule = 9999L;
 
@@ -122,11 +121,11 @@ class ReservationFacadeTest {
 
         // given
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
+        Long concertId = 1L;
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule.getId()));
         String tokenId = "TOKEN_ID";
-        reservationJpaRepository.save(Reservation.create(concertSchedule,saveUse,seat,tokenId));
+        reservationJpaRepository.save(Reservation.create(concertSchedule.getId(),saveUse.getId(),seat.getId(),tokenId));
 
         // when //then
         assertThatThrownBy(()-> reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
@@ -142,9 +141,9 @@ class ReservationFacadeTest {
 
         // given
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
-        Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule));
+        Long concertId = 1L;
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule.getId()));
         String tokenId = "TOKEN_ID";
 
         // when

@@ -5,12 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import kr.hhplus.be.server.domain.common.entity.BaseEntity;
-import kr.hhplus.be.server.domain.reservation.model.Reservation;
-import kr.hhplus.be.server.domain.user.model.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,26 +25,22 @@ public class Payment extends BaseEntity {
 
     private PaymentStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
-    @OneToOne
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
+    private Long reservationId;
 
     @Builder
-    private Payment(User user, Reservation reservation, Long amount, PaymentStatus status) {
-        this.user = user;
-        this.reservation = reservation;
+    private Payment(Long userId, Long reservationId, Long amount, PaymentStatus status) {
+        this.userId = userId;
+        this.reservationId = reservationId;
         this.amount = amount;
         this.status = status;
     }
 
-    public static Payment create(User user, Reservation reservation, Long amount, PaymentStatus status) {
+    public static Payment create(Long userId, Long reservationId, Long amount, PaymentStatus status) {
         return Payment.builder()
-                .user(user)
-                .reservation(reservation)
+                .userId(userId)
+                .reservationId(reservationId)
                 .amount(amount)
                 .status(status)
                 .build();

@@ -35,10 +35,10 @@ public class ReservationFacade {
         Seat seat = concertQueryService.getSeat(seatId);
 
         reservationQueryService.existingReservation(concertScheduleId,seatId);
-        Reservation reservation = reservationCommandService.createReservation(concertSchedule, user,
-                seat, tokenId);
+        Reservation reservation = reservationCommandService.createReservation(concertSchedule.getId(), user.getId(),
+                seat.getId(), tokenId);
 
-        return new ReservationInfo(reservation.getId(),reservation.getSeat().getId());
+        return new ReservationInfo(reservation.getId(),reservation.getSeatId());
     }
 
 

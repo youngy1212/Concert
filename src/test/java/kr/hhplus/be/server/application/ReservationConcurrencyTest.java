@@ -66,8 +66,8 @@ class ReservationConcurrencyTest {
         Concert concert = concertJpaRepository.save(Concert.create("콘서트", "올림픽홀"));
 
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(
-                ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
+                ConcertSchedule.create(concert.getId(), LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule.getId()));
 
         int numberOfThreads = 3;
 
