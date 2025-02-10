@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
-@Tag(name = "Token Controller", description = "대기열 토큰 발급 API")
+@Tag(name = "Queue Controller", description = "대기열 토큰 발급 API")
 public interface SwaggerTokenController {
 
     @Operation(
@@ -21,7 +21,7 @@ public interface SwaggerTokenController {
                             responseCode = "200",
                             description = "발급 성공",
                             content = @Content(
-                                    schema = @Schema(implementation = TokenResponse.class)
+                                    schema = @Schema(implementation = WaitingQueueResponse.class)
                             )
                     ),
                     @ApiResponse(
@@ -33,8 +33,8 @@ public interface SwaggerTokenController {
                     )
             }
     )
-    ResponseEntity<TokenResponse> issueServiceToken(@PathVariable Long userId,
-                                                    @PathVariable Long concertId);
+    ResponseEntity<WaitingQueueResponse> waitingQueue(@PathVariable Long userId,
+                                               @PathVariable Long concertId);
 
 }
 
