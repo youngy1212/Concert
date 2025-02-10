@@ -28,7 +28,7 @@ public class PaymentFacade {
 
     //예약 및 결제 완료
     @Transactional
-    public PaymentReservationInfo completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long ReservationId, String paymentData) {
+    public PaymentReservationInfo completeReservation(Long userId, Long ConcertScheduleId, Long seatId, Long ReservationId, String paymentData) {
 
         User user = userQueryService.getUserById(userId);
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);

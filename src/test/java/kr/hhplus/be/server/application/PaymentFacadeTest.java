@@ -10,13 +10,12 @@ import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
-import kr.hhplus.be.server.domain.token.model.QueueToken;
+import kr.hhplus.be.server.domain.token.service.QueueService;
 import kr.hhplus.be.server.domain.user.model.User;
-import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
 import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
-import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
+import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,15 +31,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("test")
 @Testcontainers
 class PaymentFacadeTest {
-    
+
     @Autowired
     private PaymentFacade paymentFacade;
 
     @Autowired
-    private UserJpaRepository userJpaRepository;
+    private PointJpaRepository pointJpaRepository;
 
     @Autowired
-    private ConcertJpaRepository concertJpaRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
     private ConcertScheduleJpaRepository concertScheduleJpaRepository;
@@ -49,18 +48,17 @@ class PaymentFacadeTest {
     private SeatJpaRepository seatJpaRepository;
 
     @Autowired
-    private QueueTokenJpaRepository queueTokenJpaRepository;
+    private QueueService queueService;
 
     @Autowired
     private ReservationJpaRepository reservationJpaRepository;
 
     @BeforeEach
     void tearDown() {
-        queueTokenJpaRepository.deleteAllInBatch();
         reservationJpaRepository.deleteAllInBatch();
         seatJpaRepository.deleteAllInBatch();
         concertScheduleJpaRepository.deleteAllInBatch();
-        concertJpaRepository.deleteAllInBatch();
+        pointJpaRepository.deleteAllInBatch();
         userJpaRepository.deleteAllInBatch();
     }
 
@@ -72,14 +70,16 @@ class PaymentFacadeTest {
         Long concertId = 1L;
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule.getId()));
-        QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse.getId(), concertId));
-        Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule.getId(), saveUse.getId(), seat.getId(),queueToken.getQueueTokenId()));
+        Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule.getId(), saveUse.getId(), seat.getId()));
         String payData = "AA";
+
+        queueService.addWaitingQueue(saveUse.getId().toString(), concertId.toString());
+        queueService.addActiveQueue(saveUse.getId().toString(),1000);
 
 
         // When
         PaymentReservationInfo paymentReservationInfo = paymentFacade.completeReservation(
-                saveUse.getId(), concertSchedule.getId(), seat.getId() , queueToken.getQueueTokenId(), reservation.getId(),payData);
+                saveUse.getId(), concertSchedule.getId(), seat.getId() ,reservation.getId(),payData);
 
 
         // Then
@@ -97,13 +97,15 @@ class PaymentFacadeTest {
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20,2000L, concertSchedule.getId()));
         Seat seat2 = seatJpaRepository.save(Seat.create(21, 2000L, concertSchedule.getId()));
-        QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse.getId(), concertId));
-        Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule.getId(), saveUse.getId(), seat.getId(), queueToken.getQueueTokenId()));
+        Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule.getId(), saveUse.getId(), seat.getId()));
         String payData = "AA";
+
+        queueService.addWaitingQueue(saveUse.getId().toString(), concertId.toString());
+        queueService.addActiveQueue(saveUse.getId().toString(),1000);
 
 
         // when //then
-        assertThatThrownBy(()-> paymentFacade.completeReservation(saveUse.getId(), concertSchedule.getId(), seat2.getId(), queueToken.getQueueTokenId(), reservation.getId(),payData))
+        assertThatThrownBy(()-> paymentFacade.completeReservation(saveUse.getId(), concertSchedule.getId(), seat2.getId(), reservation.getId(),payData))
                 .isInstanceOf(CustomException.class)
                 .hasMessage("예약 정보가 일치하지 않습니다.");
 
@@ -119,14 +121,17 @@ class PaymentFacadeTest {
         Long concertId = 1L;
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule.getId()));
-        QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse.getId(), concertId));
+
+        queueService.addWaitingQueue(user.getId().toString(), concertId.toString());
+        queueService.addActiveQueue(user.getId().toString(),1000);
+
         Reservation reservation = reservationJpaRepository.save(
-                Reservation.create(concertSchedule.getId(), saveUse.getId(), seat.getId(),queueToken.getQueueTokenId()));
+                Reservation.create(concertSchedule.getId(), saveUse.getId(), seat.getId()));
         String payData = "AA";
 
 
         // when //then
-        assertThatThrownBy(()-> paymentFacade.completeReservation(user.getId(), concertSchedule.getId(), seat.getId(), queueToken.getQueueTokenId(), reservation.getId(),payData))
+        assertThatThrownBy(()-> paymentFacade.completeReservation(user.getId(), concertSchedule.getId(), seat.getId(), reservation.getId(),payData))
                 .isInstanceOf(CustomException.class)
                 .hasMessage("예약 정보가 일치하지 않습니다.");
 

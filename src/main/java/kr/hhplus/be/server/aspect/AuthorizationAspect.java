@@ -2,7 +2,7 @@ package kr.hhplus.be.server.aspect;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.hhplus.be.server.domain.common.exception.CustomException;
-import kr.hhplus.be.server.domain.token.service.QueueTokenQueryService;
+import kr.hhplus.be.server.domain.token.service.QueueService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -18,7 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class AuthorizationAspect {
 
     @Autowired
-    private QueueTokenQueryService queueTokenQueryService; // 토큰 검증을 위한 서비스
+    private QueueService queueService; // 토큰 검증을 위한 서비스
 
 
     @Pointcut("@annotation(kr.hhplus.be.server.annotation.AuthorizationHeader)")
@@ -31,13 +31,16 @@ public class AuthorizationAspect {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
-        String token = request.getHeader("QUEUE-TOKEN");
+        String userId = request.getHeader("USER-ID");
 
-        if (!StringUtils.hasText(token)) {
+        if (!StringUtils.hasText(userId)) {
             throw new CustomException("잘못 된 경로입니다.");
         }
 
-        queueTokenQueryService.authenticateToken(token); //인증
+        if (!queueService.isUserActive(userId)) {
+            throw new CustomException("아직 대기열이 있습니다.");
+        }
+
 
     }
 

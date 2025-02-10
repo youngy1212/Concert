@@ -15,10 +15,10 @@ public class ReservationCommandService {
 
 
     //예약 생성
-    public Reservation createReservation(Long concertScheduleId, Long userId, Long seatId,String queueTokenId) {
+    public Reservation createReservation(Long concertScheduleId, Long userId, Long seatId) {
 
         //예약 생성 (10분 뒤 만료)
-        Reservation reservation = Reservation.create(concertScheduleId,userId,seatId,queueTokenId);
+        Reservation reservation = Reservation.create(concertScheduleId,userId,seatId);
 
         return reservationCommand.reservationSave(reservation);
     }

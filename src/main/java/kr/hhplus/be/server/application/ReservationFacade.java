@@ -28,7 +28,7 @@ public class ReservationFacade {
 
     @DistributedLock(key = "'reservation:' + #concertScheduleId + ':' + #seatId")
     @Transactional
-    public ReservationInfo reserveSeat(Long userId, Long seatId , Long concertScheduleId, String tokenId) {
+    public ReservationInfo reserveSeat(Long userId, Long seatId , Long concertScheduleId) {
 
         User user = userQueryService.getUserById(userId);
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(concertScheduleId);
@@ -36,7 +36,7 @@ public class ReservationFacade {
 
         reservationQueryService.existingReservation(concertScheduleId,seatId);
         Reservation reservation = reservationCommandService.createReservation(concertSchedule.getId(), user.getId(),
-                seat.getId(), tokenId);
+                seat.getId());
 
         return new ReservationInfo(reservation.getId(),reservation.getSeatId());
     }

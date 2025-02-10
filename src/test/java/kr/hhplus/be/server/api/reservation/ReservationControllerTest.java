@@ -41,10 +41,10 @@ class ReservationControllerTest {
     @Test
     void reservationSeatReturnReservationResponse() throws Exception {
         // given
-        ReservationRequest request = new ReservationRequest(1L, 2L, 3L, "TOKEN_ID");
+        ReservationRequest request = new ReservationRequest(1L, 2L, 3L);
         ReservationInfo ReservationInfo = new ReservationInfo(20L, 21L);
 
-        when(reservationFacade.reserveSeat(anyLong(), anyLong(), anyLong(), anyString()))
+        when(reservationFacade.reserveSeat(anyLong(), anyLong(), anyLong()))
                 .thenReturn(ReservationInfo);
 
         // When & Then
@@ -65,7 +65,7 @@ class ReservationControllerTest {
         PaymentReservationRequest request = new PaymentReservationRequest(1L, 2L,"TOKEN_ID",4L,5L,"Data");
         PaymentReservationInfo paymentReservationInfo = new PaymentReservationInfo(20L,1L,2L,3L,4000);
 
-        when(paymentFacade.completeReservation(anyLong(), anyLong(), anyLong(), anyString(),anyLong(), anyString()))
+        when(paymentFacade.completeReservation(anyLong(), anyLong(), anyLong(),anyLong(), anyString()))
                 .thenReturn(paymentReservationInfo);
 
         // When & Then

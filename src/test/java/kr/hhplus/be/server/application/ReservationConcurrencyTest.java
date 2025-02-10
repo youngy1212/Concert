@@ -84,8 +84,7 @@ class ReservationConcurrencyTest {
                 reservationFacade.reserveSeat(
                         user1.getId(),
                         seat.getId(),
-                        concertSchedule.getId(),
-                        "token1"
+                        concertSchedule.getId()
                 );
                 successCount.incrementAndGet();
             } catch (Exception e) {
@@ -100,8 +99,7 @@ class ReservationConcurrencyTest {
                 reservationFacade.reserveSeat(
                         user2.getId(),
                         seat.getId(),
-                        concertSchedule.getId(),
-                        "token2"
+                        concertSchedule.getId()
                 );
                 successCount.incrementAndGet();
             } catch (Exception e) {
@@ -116,8 +114,7 @@ class ReservationConcurrencyTest {
                 reservationFacade.reserveSeat(
                         user3.getId(),
                         seat.getId(),
-                        concertSchedule.getId(),
-                        "token3"
+                        concertSchedule.getId()
                 );
                 successCount.incrementAndGet();
             } catch (Exception e) {

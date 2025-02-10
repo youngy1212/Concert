@@ -16,7 +16,6 @@ import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
 import kr.hhplus.be.server.infrastructure.payment.PaymentJpaRepository;
 import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
-import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -51,9 +50,6 @@ class ReservationFacadeTest {
     private SeatJpaRepository seatJpaRepository;
 
     @Autowired
-    private QueueTokenJpaRepository queueTokenJpaRepository;
-
-    @Autowired
     private ReservationJpaRepository reservationJpaRepository;
 
     @Autowired
@@ -64,7 +60,6 @@ class ReservationFacadeTest {
 
     @BeforeEach
     void tearDown() {
-        queueTokenJpaRepository.deleteAllInBatch();
         paymentJpaRepository.deleteAllInBatch();
         reservationJpaRepository.deleteAllInBatch();
         seatJpaRepository.deleteAllInBatch();
@@ -88,7 +83,7 @@ class ReservationFacadeTest {
 
         // when //then
         assertThatThrownBy(()-> reservationFacade.reserveSeat(userId, seat.getId(),
-                concertSchedule.getId(), tokenId))
+                concertSchedule.getId()))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("유저를 찾을 수 없습니다.");
 
@@ -109,7 +104,7 @@ class ReservationFacadeTest {
 
         // when //then
         assertThatThrownBy(()-> reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
-                ConcertSchedule, tokenId))
+                ConcertSchedule))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("콘서트 일정을 찾을 수 없습니다.");
 
@@ -125,11 +120,11 @@ class ReservationFacadeTest {
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,10,0)));
         Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule.getId()));
         String tokenId = "TOKEN_ID";
-        reservationJpaRepository.save(Reservation.create(concertSchedule.getId(),saveUse.getId(),seat.getId(),tokenId));
+        reservationJpaRepository.save(Reservation.create(concertSchedule.getId(),saveUse.getId(),seat.getId()));
 
         // when //then
         assertThatThrownBy(()-> reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
-                concertSchedule.getId(), tokenId))
+                concertSchedule.getId()))
                 .isInstanceOf(CustomException.class)
                 .hasMessage("이미 선택된 좌석입니다.");
 
@@ -148,7 +143,7 @@ class ReservationFacadeTest {
 
         // when
         ReservationInfo ReservationInfo = reservationFacade.reserveSeat(saveUse.getId(), seat.getId(),
-                concertSchedule.getId(), tokenId);
+                concertSchedule.getId());
 
         assertNotNull(ReservationInfo);
 

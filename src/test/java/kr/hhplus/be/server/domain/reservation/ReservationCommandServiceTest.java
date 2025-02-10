@@ -41,15 +41,14 @@ class ReservationCommandServiceTest {
         Long seatId = 2L;
         Seat seat = Seat.create(10,100000L, concertScheduleId);
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(50);
-        String token = "TOKEN_ID";
 
-       Reservation Reservation = new Reservation(concertScheduleId, user.getId(),seatId, expiresAt,ReservationStatus.RESERVED,token);
+       Reservation Reservation = new Reservation(concertScheduleId, user.getId(),seatId, expiresAt,ReservationStatus.RESERVED);
 
         when(reservationCommand.reservationSave(any(Reservation.class))).thenReturn(Reservation);
 
         // when
         reservationCommandService.createReservation(concertScheduleId,
-                user.getId(), seatId,token);
+                user.getId(), seatId);
 
         // then
         verify(reservationCommand).reservationSave(any(Reservation.class));
@@ -67,7 +66,7 @@ class ReservationCommandServiceTest {
         Seat seat = Seat.create(10,100000L,concertSchedule.getId());
         LocalDateTime time = LocalDateTime.of(2024,12,12,10,0);
         String tokenId = "TOKEN_ID";
-        Reservation reservation = new Reservation(concertSchedule.getId(),user.getId(),seat.getId(),time.minusMinutes(10), ReservationStatus.RESERVED,tokenId);
+        Reservation reservation = new Reservation(concertSchedule.getId(),user.getId(),seat.getId(),time.minusMinutes(10), ReservationStatus.RESERVED);
 
         // when
         boolean expired = reservation.isExpired(time);
@@ -86,7 +85,7 @@ class ReservationCommandServiceTest {
         Seat seat = Seat.create(10,100000L,concertSchedule.getId());
         LocalDateTime time = LocalDateTime.of(2024,12,12,10,0);
         String tokenId = "TOKEN_ID";
-        Reservation reservation = new Reservation(concertSchedule.getId(),user.getId(),seat.getId(),time.plusMinutes(10), ReservationStatus.RESERVED,tokenId);
+        Reservation reservation = new Reservation(concertSchedule.getId(),user.getId(),seat.getId(),time.plusMinutes(10), ReservationStatus.RESERVED);
 
         // when
         boolean expired = reservation.isExpired(time);

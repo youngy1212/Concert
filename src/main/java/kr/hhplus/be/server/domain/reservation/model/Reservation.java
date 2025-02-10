@@ -48,25 +48,22 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
-    private String queueTokenId;
 
     @Builder
     public Reservation(Long concertScheduleId, Long userId, Long seatId,
-                       LocalDateTime expiresAt, ReservationStatus status, String queueTokenId) {
+                       LocalDateTime expiresAt, ReservationStatus status) {
         this.concertScheduleId = concertScheduleId;
         this.userId = userId;
         this.seatId = seatId;
         this.expiresAt = expiresAt;
         this.status = status;
-        this.queueTokenId = queueTokenId;
     }
 
-    public static Reservation create(Long concertScheduleId, Long userId, Long seatId, String queueTokenId) {
+    public static Reservation create(Long concertScheduleId, Long userId, Long seatId) {
         return Reservation.builder()
                 .concertScheduleId(concertScheduleId)
                 .userId(userId)
                 .seatId(seatId)
-                .queueTokenId(queueTokenId)
                 .expiresAt(LocalDateTime.now().plusMinutes(10))
                 .status(ReservationStatus.RESERVED).build();
     }

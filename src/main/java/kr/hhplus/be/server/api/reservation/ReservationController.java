@@ -29,7 +29,7 @@ public class ReservationController implements SwaggerReservationController {
             @RequestBody ReservationRequest request
     ){
         ReservationInfo reservationInfo = reservationFacade.reserveSeat(
-                request.getUserId(), request.getSeatId(), request.getConcertScheduleId(), request.getTokenId());
+                request.getUserId(), request.getSeatId(), request.getConcertScheduleId());
         return ResponseEntity.ok(ReservationResponse.of(reservationInfo.reservationId(), reservationInfo.seatId()));
     }
 
@@ -38,7 +38,7 @@ public class ReservationController implements SwaggerReservationController {
     public ResponseEntity<CompleteReservationResponse> reservationSeat(@RequestBody PaymentReservationRequest request){
         PaymentReservationInfo paymentReservationInfo = paymentFacade.completeReservation(request.getUserId(),
                 request.getConcertScheduleId(), request.getSeatId()
-                , request.getTokenId(), request.getReservationId(), request.getPaymentData());
+                , request.getReservationId(), request.getPaymentData());
         return ResponseEntity.ok(CompleteReservationResponse.of(paymentReservationInfo.concertScheduleId(), paymentReservationInfo.userId(),
                 paymentReservationInfo.seatId(), paymentReservationInfo.paymentId(), paymentReservationInfo.amount()));
     }
