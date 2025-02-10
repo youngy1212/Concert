@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
-import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
 import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
@@ -38,9 +37,8 @@ class ConcertControllerTest {
     void getConcertScheduleReturnConcertDateResponseList() throws Exception {
         // given
         long concertId = 1L;
-        Concert concert = Concert.create("콘서트", "고척돔");
-        ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024, 12, 12, 8, 50));
-        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concert,LocalDateTime.of(2024,12,13,8,50));
+        ConcertSchedule concertSchedule = ConcertSchedule.create(concertId, LocalDateTime.of(2024, 12, 12, 8, 50));
+        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concertId,LocalDateTime.of(2024,12,13,8,50));
 
         List<ConcertSchedule> schedules = List.of(concertSchedule, concertSchedule2);
 

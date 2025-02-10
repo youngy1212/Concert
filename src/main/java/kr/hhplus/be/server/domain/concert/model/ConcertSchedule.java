@@ -1,15 +1,11 @@
 package kr.hhplus.be.server.domain.concert.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import kr.hhplus.be.server.domain.common.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -27,21 +23,18 @@ public class ConcertSchedule extends BaseEntity {
     @Column(name = "concert_schedule_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "concert_id")
-    @JsonIgnore
-    private Concert concert;
+    private Long concertId;
 
     private LocalDateTime concertDate;
 
     @Builder
-    private ConcertSchedule( Concert concert, LocalDateTime concertDate) {
-        this.concert = concert;
+    private ConcertSchedule(Long concertId, LocalDateTime concertDate) {
+        this.concertId = concertId;
         this.concertDate = concertDate;
     }
 
-    public static ConcertSchedule  create(Concert concert,LocalDateTime concertDate){
-        return ConcertSchedule.builder().concert(concert).concertDate(concertDate).build();
+    public static ConcertSchedule  create(Long concertId,LocalDateTime concertDate){
+        return ConcertSchedule.builder().concertId(concertId).concertDate(concertDate).build();
     }
 
 

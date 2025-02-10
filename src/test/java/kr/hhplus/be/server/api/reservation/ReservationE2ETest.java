@@ -11,15 +11,13 @@ import kr.hhplus.be.server.api.reservation.dto.ReservationResponse;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
-import kr.hhplus.be.server.domain.token.model.QueueToken;
+import kr.hhplus.be.server.domain.token.service.QueueService;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.SeatJpaRepository;
 import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
-import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,9 +50,6 @@ public class ReservationE2ETest {
     private ConcertJpaRepository concertJpaRepository;
 
     @Autowired
-    private QueueTokenJpaRepository queueTokenJpaRepository;
-
-    @Autowired
     private ConcertScheduleJpaRepository concertScheduleJpaRepository;
 
     @Autowired
@@ -63,24 +58,29 @@ public class ReservationE2ETest {
     @Autowired
     private ReservationJpaRepository reservationJpaRepository;
 
+    @Autowired
+    private QueueService queueService;
+
     @DisplayName("콘서트를 예약 (E2E)")
     @Test
     void concertReservationE2E() {
         // given
         User use = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use, concert));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert.getId(), LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule.getId()));
+
+        queueService.addWaitingQueue(use.getId().toString(), concert.getId().toString());
+        queueService.addActiveQueue(use.getId().toString(),1000);
 
         ReservationRequest reservationRequest = new ReservationRequest(seat.getId(), use.getId(),
-                concertSchedule.getId(), token.getQueueTokenId());
+                concertSchedule.getId());
 
         String url = "http://localhost:" + port + "/concert/seats/reservation";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("QUEUE-TOKEN", token.getQueueTokenId());
+        headers.add("USER-ID", use.getId().toString());
         HttpEntity<ReservationRequest> entity = new HttpEntity<>(reservationRequest,headers);
 
         // When
@@ -106,17 +106,18 @@ public class ReservationE2ETest {
         // given
         User use = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
-        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use, concert));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
+        ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert.getId(), LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule.getId()));
+
+        queueService.addWaitingQueue(use.getId().toString(), concert.getId().toString());
+        queueService.addActiveQueue(use.getId().toString(),1000);
 
         Reservation reservation = reservationJpaRepository.save(
-                Reservation.create(concertSchedule, use, seat, token.getQueueTokenId()));
+                Reservation.create(concertSchedule.getId(), use.getId(), seat.getId()));
 
         PaymentReservationRequest request = PaymentReservationRequest.builder()
                 .userId(use.getId())
                 .seatId(seat.getId())
-                .tokenId(token.getQueueTokenId())
                 .concertScheduleId(concertSchedule.getId())
                 .paymentData("payData")
                 .reservationId(reservation.getId()).build();
@@ -125,7 +126,7 @@ public class ReservationE2ETest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("QUEUE-TOKEN", token.getQueueTokenId());
+        headers.add("USER-ID", use.getId().toString());
         HttpEntity<PaymentReservationRequest> entity = new HttpEntity<>(request,headers);
 
         // When

@@ -12,12 +12,10 @@ public class ReservationRequest {
     private Long seatId;
     private Long userId;
     private Long concertScheduleId;
-    private String tokenId;
 
-    public ReservationRequest(Long seatId, Long userId, Long concertScheduleId, String tokenId) {
+    public ReservationRequest(Long seatId, Long userId, Long concertScheduleId) {
         this.seatId = seatId;
         this.userId = userId;
         this.concertScheduleId = concertScheduleId;
-        this.tokenId = tokenId;
     }
 }

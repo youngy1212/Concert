@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
@@ -67,8 +66,8 @@ class ReservationConcurrencyTest {
         Concert concert = concertJpaRepository.save(Concert.create("콘서트", "올림픽홀"));
 
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(
-                ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED , 2000L, concertSchedule));
+                ConcertSchedule.create(concert.getId(), LocalDateTime.of(2024,12,12,10,0)));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule.getId()));
 
         int numberOfThreads = 3;
 
@@ -85,8 +84,7 @@ class ReservationConcurrencyTest {
                 reservationFacade.reserveSeat(
                         user1.getId(),
                         seat.getId(),
-                        concertSchedule.getId(),
-                        "token1"
+                        concertSchedule.getId()
                 );
                 successCount.incrementAndGet();
             } catch (Exception e) {
@@ -101,8 +99,7 @@ class ReservationConcurrencyTest {
                 reservationFacade.reserveSeat(
                         user2.getId(),
                         seat.getId(),
-                        concertSchedule.getId(),
-                        "token2"
+                        concertSchedule.getId()
                 );
                 successCount.incrementAndGet();
             } catch (Exception e) {
@@ -117,8 +114,7 @@ class ReservationConcurrencyTest {
                 reservationFacade.reserveSeat(
                         user3.getId(),
                         seat.getId(),
-                        concertSchedule.getId(),
-                        "token3"
+                        concertSchedule.getId()
                 );
                 successCount.incrementAndGet();
             } catch (Exception e) {

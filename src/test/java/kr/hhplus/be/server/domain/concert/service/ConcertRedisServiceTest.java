@@ -54,8 +54,8 @@ class ConcertRedisServiceTest {
         long concertId = 1L;
         Concert concert = Concert.create("콘서트", "고척돔");
         String key = "concert:schedule:" + concertId;
-        ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024, 12, 12, 8, 50));
-        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concert,LocalDateTime.of(2024,12,13,8,50));
+        ConcertSchedule concertSchedule = ConcertSchedule.create(concertId, LocalDateTime.of(2024, 12, 12, 8, 50));
+        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concertId,LocalDateTime.of(2024,12,13,8,50));
         List<ConcertSchedule> schedules =List.of(concertSchedule, concertSchedule2);
         when(concertQuery.findAllByConcertId(concertId)).thenReturn(schedules);
         redisTemplate.delete(key);
@@ -82,8 +82,8 @@ class ConcertRedisServiceTest {
         long concertId = 1L;
         Concert concert = Concert.create("콘서트", "고척돔");
         String key = "concert:schedule:" + concertId;
-        ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024, 12, 12, 8, 50));
-        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concert,LocalDateTime.of(2024,12,13,8,50));
+        ConcertSchedule concertSchedule = ConcertSchedule.create(concertId, LocalDateTime.of(2024, 12, 12, 8, 50));
+        ConcertSchedule concertSchedule2 = ConcertSchedule.create(concertId,LocalDateTime.of(2024,12,13,8,50));
 
         List<ConcertSchedule> schedules = List.of(concertSchedule,concertSchedule2);
         ConcertDateInfo concertDateInfo = new ConcertDateInfo(schedules);

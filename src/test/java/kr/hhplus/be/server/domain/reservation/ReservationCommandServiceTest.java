@@ -1,7 +1,5 @@
 package kr.hhplus.be.server.domain.reservation;
 
-import static kr.hhplus.be.server.domain.concert.model.SeatStatus.AVAILABLE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,23 +37,20 @@ class ReservationCommandServiceTest {
         // given
         User user = User.create("유저이름", "email.com");
         Concert concert = Concert.create("공연", "고척돔");
-        ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
-        Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
+        Long concertScheduleId = 2L;
+        Long seatId = 2L;
+        Seat seat = Seat.create(10,100000L, concertScheduleId);
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(50);
-        String token = "TOKEN_ID";
 
-       Reservation Reservation = new Reservation(concertSchedule, user, seat, expiresAt,ReservationStatus.RESERVED,token);
+       Reservation Reservation = new Reservation(concertScheduleId, user.getId(),seatId, expiresAt,ReservationStatus.RESERVED);
 
         when(reservationCommand.reservationSave(any(Reservation.class))).thenReturn(Reservation);
 
         // when
-        Reservation result = reservationCommandService.createReservation(concertSchedule,
-                user, seat,token);
+        reservationCommandService.createReservation(concertScheduleId,
+                user.getId(), seatId);
 
         // then
-        assertEquals(result.getUser().getName(), user.getName());
-        assertEquals(result.getConcertSchedule().getConcertDate(), concertSchedule.getConcertDate());
-        assertEquals(result.getSeat().getSeatNumber(), seat.getSeatNumber());
         verify(reservationCommand).reservationSave(any(Reservation.class));
 
     }
@@ -66,12 +61,12 @@ class ReservationCommandServiceTest {
     void ReservationIsExpiredFalse() {
         // given
         User user = User.create("유저이름", "email.com");
-        Concert concert = Concert.create("공연", "고척돔");
-        ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
-        Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
+        long concertId = 1L;
+        ConcertSchedule concertSchedule = ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,18,0));
+        Seat seat = Seat.create(10,100000L,concertSchedule.getId());
         LocalDateTime time = LocalDateTime.of(2024,12,12,10,0);
         String tokenId = "TOKEN_ID";
-        Reservation reservation = new Reservation(concertSchedule,user,seat,time.minusMinutes(10), ReservationStatus.RESERVED,tokenId);
+        Reservation reservation = new Reservation(concertSchedule.getId(),user.getId(),seat.getId(),time.minusMinutes(10), ReservationStatus.RESERVED);
 
         // when
         boolean expired = reservation.isExpired(time);
@@ -85,12 +80,12 @@ class ReservationCommandServiceTest {
     void ReservationIsExpiredTure() {
         // given
         User user = User.create("유저이름", "email.com");
-        Concert concert = Concert.create("공연", "고척돔");
-        ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
-        Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
+        long concertId = 1L;
+        ConcertSchedule concertSchedule = ConcertSchedule.create(concertId, LocalDateTime.of(2024,12,12,18,0));
+        Seat seat = Seat.create(10,100000L,concertSchedule.getId());
         LocalDateTime time = LocalDateTime.of(2024,12,12,10,0);
         String tokenId = "TOKEN_ID";
-        Reservation reservation = new Reservation(concertSchedule,user,seat,time.plusMinutes(10), ReservationStatus.RESERVED,tokenId);
+        Reservation reservation = new Reservation(concertSchedule.getId(),user.getId(),seat.getId(),time.plusMinutes(10), ReservationStatus.RESERVED);
 
         // when
         boolean expired = reservation.isExpired(time);

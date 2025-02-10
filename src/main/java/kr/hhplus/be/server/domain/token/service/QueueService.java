@@ -88,4 +88,9 @@ public class QueueService {
 
     }
 
+    //활성 유저 체크
+    public boolean isUserActive(String userId) {
+        Boolean isMember =redisTemplate.opsForSet().isMember(ACTIVE_TOKENS_KEY, userId);
+        return Boolean.TRUE.equals(isMember);
+    }
 }

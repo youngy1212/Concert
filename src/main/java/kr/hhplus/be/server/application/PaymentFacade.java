@@ -28,7 +28,7 @@ public class PaymentFacade {
 
     //예약 및 결제 완료
     @Transactional
-    public PaymentReservationInfo completeReservation(Long userId, Long ConcertScheduleId, Long seatId, String tokenId, Long ReservationId, String paymentData) {
+    public PaymentReservationInfo completeReservation(Long userId, Long ConcertScheduleId, Long seatId, Long ReservationId, String paymentData) {
 
         User user = userQueryService.getUserById(userId);
         ConcertSchedule concertSchedule = concertQueryService.getConcertSchedule(ConcertScheduleId);
@@ -36,12 +36,12 @@ public class PaymentFacade {
 
         Reservation reservation = reservationCommandService.findByLock(ReservationId); //락
 
-        reservation.validateReservation(user, seat);
+        reservation.validateReservation(user.getId(), seat.getId());
         PaySystem.pay(seat.getPrice());
 
         //결제 성공시
         reservation.book();
-        Payment payment = paymentCommandService.savePayment(user, reservation, seat.getPrice(), PaymentStatus.SUCCESS);
+        Payment payment = paymentCommandService.savePayment(user.getId(), reservation.getId(), seat.getPrice(), PaymentStatus.SUCCESS);
         return new PaymentReservationInfo(concertSchedule.getId(),user.getId(), seat.getId(), payment.getId(), payment.getAmount());
 
     }

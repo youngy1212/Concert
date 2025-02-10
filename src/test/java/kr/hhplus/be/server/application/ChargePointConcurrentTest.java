@@ -11,7 +11,6 @@ import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.service.UserCommandService;
 import kr.hhplus.be.server.infrastructure.payment.PaymentJpaRepository;
 import kr.hhplus.be.server.infrastructure.reservation.ReservationJpaRepository;
-import kr.hhplus.be.server.infrastructure.token.QueueTokenJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;
 import kr.hhplus.be.server.infrastructure.user.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +38,6 @@ class ChargePointConcurrentTest {
     private PointJpaRepository pointJpaRepository;
 
     @Autowired
-    private QueueTokenJpaRepository queueTokenJpaRepository;
-
-    @Autowired
     private ReservationJpaRepository reservationJpaRepository;
 
     @Autowired
@@ -51,7 +47,6 @@ class ChargePointConcurrentTest {
     void tearDown() {
         paymentJpaRepository.deleteAllInBatch();
         reservationJpaRepository.deleteAllInBatch();
-        queueTokenJpaRepository.deleteAllInBatch();
         pointJpaRepository.deleteAllInBatch();
         userJpaRepository.deleteAllInBatch();
     }
@@ -62,7 +57,6 @@ class ChargePointConcurrentTest {
         // given
         User user1 = userJpaRepository.save(User.create("유저1", "이이메일"));
         pointJpaRepository.save(Point.create(1000L, user1));
-
 
         int numberOfThreads = 3;
 
