@@ -11,7 +11,6 @@ import kr.hhplus.be.server.api.reservation.dto.PaymentReservationRequest;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.user.model.User;
@@ -70,7 +69,7 @@ class AuthorizationAspectTest {
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.createInTime(saveUse,concert,LocalDateTime.now().plusMinutes(20)));
         Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule, saveUse, seat, queueToken.getQueueTokenId()));
 
@@ -105,7 +104,7 @@ class AuthorizationAspectTest {
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20,2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse,concert));
         Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule, saveUse, seat, queueToken.getQueueTokenId()));
 
@@ -141,7 +140,7 @@ class AuthorizationAspectTest {
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.createInTime(saveUse,concert,LocalDateTime.now().minusMinutes(20)));
 
         Reservation reservation = reservationJpaRepository.save(

@@ -10,7 +10,6 @@ import kr.hhplus.be.server.domain.common.exception.CustomException;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.user.model.User;
@@ -83,7 +82,7 @@ class PaymentFacadeTest {
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED , 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse, concert));
         Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule, saveUse, seat,queueToken.getQueueTokenId()));
         String payData = "AA";
@@ -107,8 +106,8 @@ class PaymentFacadeTest {
         User saveUse = userJpaRepository.save(User.create("유저", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED , 2000L, concertSchedule));
-        Seat seat2 = seatJpaRepository.save(Seat.create(21, SeatStatus.RESERVED , 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20,2000L, concertSchedule));
+        Seat seat2 = seatJpaRepository.save(Seat.create(21, 2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse, concert));
         Reservation reservation = reservationJpaRepository.save(Reservation.create(concertSchedule, saveUse, seat, queueToken.getQueueTokenId()));
         String payData = "AA";
@@ -130,7 +129,7 @@ class PaymentFacadeTest {
         User user = userJpaRepository.save(User.create("유저2", "eamil@naemver"));
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1","인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED , 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
         QueueToken queueToken = queueTokenJpaRepository.save(QueueToken.create(saveUse, concert));
         Reservation reservation = reservationJpaRepository.save(
                 Reservation.create(concertSchedule, saveUse, seat,queueToken.getQueueTokenId()));

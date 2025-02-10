@@ -10,7 +10,6 @@ import kr.hhplus.be.server.api.concert.dto.SeatResponse;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
@@ -98,8 +97,8 @@ class ConcertE2ETest {
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use, concert));
-        Seat seat1 = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
-        Seat seat2 = seatJpaRepository.save(Seat.create(21, SeatStatus.RESERVED, 2000L, concertSchedule));
+        Seat seat1 = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule));
+        Seat seat2 = seatJpaRepository.save(Seat.create(21,  2000L, concertSchedule));
 
 
         String url = "http://localhost:" + port + "/concert/seats/" + concertSchedule.getId();

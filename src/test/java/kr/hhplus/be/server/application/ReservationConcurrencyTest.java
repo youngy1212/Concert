@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
@@ -68,7 +67,7 @@ class ReservationConcurrencyTest {
 
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(
                 ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED , 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
 
         int numberOfThreads = 3;
 

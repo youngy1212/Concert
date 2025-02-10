@@ -11,7 +11,6 @@ import kr.hhplus.be.server.api.reservation.dto.ReservationResponse;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
-import kr.hhplus.be.server.domain.concert.model.SeatStatus;
 import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.token.model.QueueToken;
 import kr.hhplus.be.server.domain.user.model.User;
@@ -71,7 +70,7 @@ public class ReservationE2ETest {
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use, concert));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20,  2000L, concertSchedule));
 
         ReservationRequest reservationRequest = new ReservationRequest(seat.getId(), use.getId(),
                 concertSchedule.getId(), token.getQueueTokenId());
@@ -108,7 +107,7 @@ public class ReservationE2ETest {
         Concert concert = concertJpaRepository.save(Concert.create("콘서트1", "인스파이어"));
         ConcertSchedule concertSchedule = concertScheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,10,0)));
         QueueToken token = queueTokenJpaRepository.save(QueueToken.create(use, concert));
-        Seat seat = seatJpaRepository.save(Seat.create(20, SeatStatus.RESERVED, 2000L, concertSchedule));
+        Seat seat = seatJpaRepository.save(Seat.create(20, 2000L, concertSchedule));
 
         Reservation reservation = reservationJpaRepository.save(
                 Reservation.create(concertSchedule, use, seat, token.getQueueTokenId()));

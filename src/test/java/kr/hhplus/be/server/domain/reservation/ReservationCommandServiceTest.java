@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.reservation;
 
-import static kr.hhplus.be.server.domain.concert.model.SeatStatus.AVAILABLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,7 +39,7 @@ class ReservationCommandServiceTest {
         User user = User.create("유저이름", "email.com");
         Concert concert = Concert.create("공연", "고척돔");
         ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
-        Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
+        Seat seat = Seat.create(10,100000L,concertSchedule);
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(50);
         String token = "TOKEN_ID";
 
@@ -68,7 +67,7 @@ class ReservationCommandServiceTest {
         User user = User.create("유저이름", "email.com");
         Concert concert = Concert.create("공연", "고척돔");
         ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
-        Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
+        Seat seat = Seat.create(10,100000L,concertSchedule);
         LocalDateTime time = LocalDateTime.of(2024,12,12,10,0);
         String tokenId = "TOKEN_ID";
         Reservation reservation = new Reservation(concertSchedule,user,seat,time.minusMinutes(10), ReservationStatus.RESERVED,tokenId);
@@ -87,7 +86,7 @@ class ReservationCommandServiceTest {
         User user = User.create("유저이름", "email.com");
         Concert concert = Concert.create("공연", "고척돔");
         ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
-        Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
+        Seat seat = Seat.create(10,100000L,concertSchedule);
         LocalDateTime time = LocalDateTime.of(2024,12,12,10,0);
         String tokenId = "TOKEN_ID";
         Reservation reservation = new Reservation(concertSchedule,user,seat,time.plusMinutes(10), ReservationStatus.RESERVED,tokenId);

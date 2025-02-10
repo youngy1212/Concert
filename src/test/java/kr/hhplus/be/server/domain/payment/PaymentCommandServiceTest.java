@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.payment;
 
-import static kr.hhplus.be.server.domain.concert.model.SeatStatus.AVAILABLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -39,7 +38,7 @@ class PaymentCommandServiceTest {
         User user = User.create("유저이름", "email.com");
         Concert concert = Concert.create("공연", "고척돔");
         ConcertSchedule concertSchedule = ConcertSchedule.create(concert, LocalDateTime.of(2024,12,12,18,0));
-        Seat seat = Seat.create(10,AVAILABLE,100000L,concertSchedule);
+        Seat seat = Seat.create(10,100000L,concertSchedule);
         String tokenId = "TOKEN_ID";
         Reservation reservation = Reservation.create(concertSchedule, user, seat,tokenId);
 
