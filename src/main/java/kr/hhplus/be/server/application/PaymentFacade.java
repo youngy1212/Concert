@@ -11,6 +11,8 @@ import kr.hhplus.be.server.domain.reservation.model.Reservation;
 import kr.hhplus.be.server.domain.reservation.service.ReservationCommandService;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
+import kr.hhplus.be.server.event.ReservationEventPublisher;
+import kr.hhplus.be.server.event.domain.ReservationSuccessEvent;
 import kr.hhplus.be.server.infrastructure.gateway.PaySystem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class PaymentFacade {
     private final ConcertQueryService concertQueryService;
     private final UserQueryService userQueryService;
     private final PaymentCommandService paymentCommandService;
+    private final ReservationEventPublisher reservationEventPublisher;
 
     //예약 및 결제 완료
     @Transactional
@@ -42,7 +45,14 @@ public class PaymentFacade {
         //결제 성공시
         reservation.book();
         Payment payment = paymentCommandService.savePayment(user.getId(), reservation.getId(), seat.getPrice(), PaymentStatus.SUCCESS);
+
+        reservationEventPublisher.send(new ReservationSuccessEvent(reservation.getId()));
+
         return new PaymentReservationInfo(concertSchedule.getId(),user.getId(), seat.getId(), payment.getId(), payment.getAmount());
 
+
     }
+
+
+
 }
