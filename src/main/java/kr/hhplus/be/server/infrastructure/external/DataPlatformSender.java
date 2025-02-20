@@ -9,7 +9,7 @@ public class DataPlatformSender {
 
     public void sendReservationData() {
         try {
-            Thread.sleep(10000);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
