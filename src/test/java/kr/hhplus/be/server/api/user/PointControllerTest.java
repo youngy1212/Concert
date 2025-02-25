@@ -9,7 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.hhplus.be.server.api.user.dto.ChargeRequest;
+import kr.hhplus.be.server.interfaces.api.user.PointController;
+import kr.hhplus.be.server.interfaces.api.user.dto.ChargeRequest;
 import kr.hhplus.be.server.domain.user.service.UserCommandService;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
 import kr.hhplus.be.server.domain.user.service.dto.ChargeInfo;

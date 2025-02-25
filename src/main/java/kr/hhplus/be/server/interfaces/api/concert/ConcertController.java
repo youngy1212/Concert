@@ -1,10 +1,10 @@
-package kr.hhplus.be.server.api.concert;
+package kr.hhplus.be.server.interfaces.api.concert;
 
 import java.util.List;
 import kr.hhplus.be.server.annotation.AuthorizationHeader;
-import kr.hhplus.be.server.api.concert.dto.ConcertDateResponse;
-import kr.hhplus.be.server.api.concert.dto.SeatResponse;
-import kr.hhplus.be.server.api.concert.dto.SwaggerConcertController;
+import kr.hhplus.be.server.interfaces.api.concert.dto.ConcertDateResponse;
+import kr.hhplus.be.server.interfaces.api.concert.dto.SeatResponse;
+import kr.hhplus.be.server.interfaces.api.concert.dto.SwaggerConcertController;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
 import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
 import kr.hhplus.be.server.domain.concert.service.dto.SeatInfo;

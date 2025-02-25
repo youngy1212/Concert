@@ -28,6 +28,7 @@ public class ReservationSpringEventPublisher implements ReservationEventPublishe
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void saveOutbox(final ReservationSuccessEvent event) throws JsonProcessingException {
+        //JsonProcessingException 에러처리하기 ^^ ~~
         outboxService.createOutbox(event.getClass().getTypeName(), event.getEventId(), event);
     }
 

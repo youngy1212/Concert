@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.reservation.dto;
+package kr.hhplus.be.server.interfaces.api.reservation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

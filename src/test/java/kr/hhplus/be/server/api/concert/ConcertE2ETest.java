@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import kr.hhplus.be.server.api.concert.dto.ConcertDateResponse;
-import kr.hhplus.be.server.api.concert.dto.SeatResponse;
+import kr.hhplus.be.server.interfaces.api.concert.dto.ConcertDateResponse;
+import kr.hhplus.be.server.interfaces.api.concert.dto.SeatResponse;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
