@@ -1,11 +1,11 @@
-package kr.hhplus.be.server.api.reservation;
+package kr.hhplus.be.server.interfaces.api.reservation;
 
 import kr.hhplus.be.server.annotation.AuthorizationHeader;
-import kr.hhplus.be.server.api.reservation.dto.CompleteReservationResponse;
-import kr.hhplus.be.server.api.reservation.dto.PaymentReservationRequest;
-import kr.hhplus.be.server.api.reservation.dto.ReservationRequest;
-import kr.hhplus.be.server.api.reservation.dto.ReservationResponse;
-import kr.hhplus.be.server.api.reservation.dto.SwaggerReservationController;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.CompleteReservationResponse;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.PaymentReservationRequest;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.ReservationRequest;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.ReservationResponse;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.SwaggerReservationController;
 import kr.hhplus.be.server.application.PaymentFacade;
 import kr.hhplus.be.server.application.ReservationFacade;
 import kr.hhplus.be.server.application.dto.PaymentReservationInfo;

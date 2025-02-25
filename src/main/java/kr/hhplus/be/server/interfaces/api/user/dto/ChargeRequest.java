@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.user.dto;
+package kr.hhplus.be.server.interfaces.api.user.dto;
 
 import kr.hhplus.be.server.domain.common.exception.CustomException;
 import lombok.Builder;

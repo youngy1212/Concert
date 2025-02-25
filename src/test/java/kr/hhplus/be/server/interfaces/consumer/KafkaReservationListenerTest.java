@@ -113,7 +113,6 @@ class KafkaReservationListenerTest {
                 .untilAsserted(() -> {
 
                     Outbox outbox = outBoxJpaRepository.findAll().get(0);
-                    log.info(outbox.getEventKey()+"=======");
                     assertEquals(OutboxStatus.SUCCESS, outbox.getOutboxStatus() );
                 });
 

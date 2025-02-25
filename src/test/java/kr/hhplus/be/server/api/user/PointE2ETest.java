@@ -2,9 +2,9 @@ package kr.hhplus.be.server.api.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import kr.hhplus.be.server.api.user.dto.ChargeRequest;
-import kr.hhplus.be.server.api.user.dto.ChargeResponse;
-import kr.hhplus.be.server.api.user.dto.PointResponse;
+import kr.hhplus.be.server.interfaces.api.user.dto.ChargeRequest;
+import kr.hhplus.be.server.interfaces.api.user.dto.ChargeResponse;
+import kr.hhplus.be.server.interfaces.api.user.dto.PointResponse;
 import kr.hhplus.be.server.domain.user.model.Point;
 import kr.hhplus.be.server.domain.user.model.User;
 import kr.hhplus.be.server.infrastructure.user.PointJpaRepository;

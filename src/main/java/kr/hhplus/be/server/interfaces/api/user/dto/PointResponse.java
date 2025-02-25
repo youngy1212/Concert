@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.user.dto;
+package kr.hhplus.be.server.interfaces.api.user.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

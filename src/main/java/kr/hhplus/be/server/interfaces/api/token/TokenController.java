@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.api.token;
+package kr.hhplus.be.server.interfaces.api.token;
 
-import kr.hhplus.be.server.api.token.dto.SwaggerTokenController;
-import kr.hhplus.be.server.api.token.dto.WaitingQueueResponse;
+import kr.hhplus.be.server.interfaces.api.token.dto.SwaggerTokenController;
+import kr.hhplus.be.server.interfaces.api.token.dto.WaitingQueueResponse;
 import kr.hhplus.be.server.domain.token.service.QueueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

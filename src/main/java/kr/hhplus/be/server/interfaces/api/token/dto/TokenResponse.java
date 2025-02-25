@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.token.dto;
+package kr.hhplus.be.server.interfaces.api.token.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;

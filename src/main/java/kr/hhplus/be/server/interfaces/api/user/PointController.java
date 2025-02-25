@@ -1,10 +1,10 @@
-package kr.hhplus.be.server.api.user;
+package kr.hhplus.be.server.interfaces.api.user;
 
 
-import kr.hhplus.be.server.api.user.dto.ChargeRequest;
-import kr.hhplus.be.server.api.user.dto.ChargeResponse;
-import kr.hhplus.be.server.api.user.dto.PointResponse;
-import kr.hhplus.be.server.api.user.dto.SwaggerPointController;
+import kr.hhplus.be.server.interfaces.api.user.dto.ChargeRequest;
+import kr.hhplus.be.server.interfaces.api.user.dto.ChargeResponse;
+import kr.hhplus.be.server.interfaces.api.user.dto.PointResponse;
+import kr.hhplus.be.server.interfaces.api.user.dto.SwaggerPointController;
 import kr.hhplus.be.server.domain.user.service.UserCommandService;
 import kr.hhplus.be.server.domain.user.service.UserQueryService;
 import kr.hhplus.be.server.domain.user.service.dto.ChargeInfo;
