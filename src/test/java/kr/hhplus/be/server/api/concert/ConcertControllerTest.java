@@ -13,6 +13,7 @@ import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.service.ConcertQueryService;
 import kr.hhplus.be.server.domain.concert.service.dto.ConcertDateInfo;
 import kr.hhplus.be.server.domain.concert.service.dto.SeatInfo;
+import kr.hhplus.be.server.interfaces.api.concert.ConcertController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

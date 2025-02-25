@@ -8,8 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.hhplus.be.server.api.reservation.dto.PaymentReservationRequest;
-import kr.hhplus.be.server.api.reservation.dto.ReservationRequest;
+import kr.hhplus.be.server.interfaces.api.reservation.ReservationController;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.PaymentReservationRequest;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.ReservationRequest;
 import kr.hhplus.be.server.application.PaymentFacade;
 import kr.hhplus.be.server.application.ReservationFacade;
 import kr.hhplus.be.server.application.dto.PaymentReservationInfo;

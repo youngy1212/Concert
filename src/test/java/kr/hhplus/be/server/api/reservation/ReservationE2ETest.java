@@ -4,10 +4,10 @@ package kr.hhplus.be.server.api.reservation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import kr.hhplus.be.server.api.reservation.dto.CompleteReservationResponse;
-import kr.hhplus.be.server.api.reservation.dto.PaymentReservationRequest;
-import kr.hhplus.be.server.api.reservation.dto.ReservationRequest;
-import kr.hhplus.be.server.api.reservation.dto.ReservationResponse;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.CompleteReservationResponse;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.PaymentReservationRequest;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.ReservationRequest;
+import kr.hhplus.be.server.interfaces.api.reservation.dto.ReservationResponse;
 import kr.hhplus.be.server.domain.concert.model.Concert;
 import kr.hhplus.be.server.domain.concert.model.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.model.Seat;
