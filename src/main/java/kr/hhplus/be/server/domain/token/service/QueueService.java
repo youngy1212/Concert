@@ -1,7 +1,5 @@
 package kr.hhplus.be.server.domain.token.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -30,14 +28,6 @@ public class QueueService {
         String queueTokenId = UUID.randomUUID().toString();
         long score = System.currentTimeMillis();
         redisTemplate.opsForZSet().add(WAITING_TOKENS_KEY, userId, score);
-
-        Map<String, String> tokenData = new HashMap<>();
-        tokenData.put("userId", userId);
-        tokenData.put("enqueuedAt", String.valueOf(score));
-        tokenData.put("status", "ENQUEUED");
-        tokenData.put("concertId", concertId);
-
-        redisTemplate.opsForHash().putAll("token:" + queueTokenId, tokenData);
 
         return getWaitingRank(userId);
     }
